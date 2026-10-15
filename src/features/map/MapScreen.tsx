@@ -1,16 +1,22 @@
 import * as Location from "expo-location";
 import { AppleMaps, GoogleMaps, useLocationPermissions } from "expo-maps";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Platform, StyleSheet, Text } from "react-native";
+import { buildHeatmapCircles } from "./Heatmap";
+import { getCapeTownCrimeHeatmapPoints } from "./crimeRiskScore";
 
 const cameraPosition = {
-  coordinates: { latitude: -33.9249, longitude: 18.4241 }, // Cape Town
+  coordinates: { latitude: -33.9249, longitude: 18.4241 },
   zoom: 12,
 };
 
 export default function MapScreen() {
   const [permission] = useLocationPermissions({ request: true });
   const showUserLocation = permission?.granted ?? false;
+  const crimeHeatmapCircles = useMemo(
+    () => buildHeatmapCircles(getCapeTownCrimeHeatmapPoints()),
+    [],
+  );
 
   const googleMapRef = useRef<GoogleMaps.MapView>(null);
   const appleMapRef = useRef<AppleMaps.MapView>(null);
@@ -40,6 +46,7 @@ export default function MapScreen() {
         style={styles.map}
         cameraPosition={cameraPosition}
         properties={{ isMyLocationEnabled: showUserLocation }}
+        circles={crimeHeatmapCircles}
       />
     );
   }
@@ -50,6 +57,7 @@ export default function MapScreen() {
         style={styles.map}
         cameraPosition={cameraPosition}
         properties={{ isMyLocationEnabled: showUserLocation }}
+        circles={crimeHeatmapCircles}
       />
     );
   }

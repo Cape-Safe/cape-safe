@@ -10,8 +10,6 @@ const BAR_WIDTH = 14;
 const BAR_HEIGHT = 130;
 const BAND_COUNT = 32;
 
-// red (top/high risk) -> yellow (mid) -> green (bottom/low risk), matching
-// the heatmap's gradient direction in ./Heatmap.
 const GRADIENT_STOPS: { stop: number; color: [number, number, number] }[] = [
   { stop: 0, color: [239, 68, 68] },
   { stop: 0.5, color: [234, 179, 8] },
@@ -53,7 +51,7 @@ function riskLabel(risk: number) {
 }
 
 type RiskGaugeProps = {
-  station?: StationRiskDetail; // defaults to the city's highest-risk station
+  station?: StationRiskDetail;
 };
 
 export default function RiskGauge({ station }: RiskGaugeProps) {
@@ -69,7 +67,7 @@ export default function RiskGauge({ station }: RiskGaugeProps) {
   );
 
   const percent = Math.round(detail.risk * 100);
-  // risk 1 (high) sits at the top of the bar, risk 0 (low) at the bottom
+
   const markerTop = (1 - detail.risk) * BAR_HEIGHT;
   const color = sampleBand(1 - detail.risk);
 
@@ -119,10 +117,14 @@ export default function RiskGauge({ station }: RiskGaugeProps) {
             )}
 
             <Text style={styles.cardFootnote}>
-              {crimeRiskMeta.scope} · FY {crimeRiskMeta.year} · {crimeRiskMeta.source}
+              {crimeRiskMeta.scope} · FY {crimeRiskMeta.year} ·{" "}
+              {crimeRiskMeta.source}
             </Text>
 
-            <Pressable style={styles.closeButton} onPress={() => setVisible(false)}>
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setVisible(false)}
+            >
               <Text style={styles.closeButtonText}>Close</Text>
             </Pressable>
           </Pressable>
