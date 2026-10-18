@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
+
+    // ── Users: private, only the owner can read/write ──────────────────
+    match /users/{uid} {
+      allow read, write: if isSelf(uid);
+    }
+
+    // ── Areas: public; only the crowd-rating totals can change, ────────
+    // ── and only by exactly one report's worth ─────────────────────────
+    match /areas/{areaId} {
+      allow read: if true;
+      allow update: if signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['reportCount', 'ratingTotal', 'lastReportAt'])
+        && request.resource.data.reportCount == resource.data.reportCount + 1
+        && request.resource.data.ratingTotal - resource.data.ratingTotal >= 1
+        && request.resource.data.ratingTotal - resource.data.ratingTotal <= 5
+        && request.resource.data.lastReportAt == request.time;
+    }
+
+    // ── Reports: signed-in users read visible ones and create their own ─
+    match /reports/{reportId} {
+      allow read: if signedIn() && resource.data.status == 'visible';
+      allow create: if signedIn()
+        && request.resource.data.authorId == request.auth.uid
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.status == 'visible'
+        && request.resource.data.createdAt == request.time
+        && (!('comment' in request.resource.data)
+            || request.resource.data.comment.size() <= 500);
+    }
+
+    // ── Alerts: public, written only by the team in the console ────────
+    match /alerts/{alertId} {
+      allow read: if true;
+    }
+
+    // ── Groups: the doc ID is the invite code ──────────────────────────
+    match /groups/{code} {
+      function members() { return resource.data.memberIds.toSet(); }
+      function newMembers() { return request.resource.data.memberIds.toSet(); }
+      function onlyMembersChanged() {
+        return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberIds']);
+      }
+
+      // Joining needs the exact code; you can't browse other people's groups.
+      allow get: if signedIn();
+      allow list: if signedIn() && request.auth.uid in resource.data.memberIds;
+
+      allow create: if signedIn()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.memberIds == [request.auth.uid];
+
+      allow update: if signedIn() && (
+        // the owner can rename the group or remove members
+        resource.data.ownerId == request.auth.uid
+        // anyone with the code can add only themselves
+        || (onlyMembersChanged()
+            && newMembers().difference(members()) == [request.auth.uid].toSet()
+            && members().difference(newMembers()).size() == 0)
+        // a member can remove only themselves (leave)
+        || (onlyMembersChanged()
+            && members().difference(newMembers()) == [request.auth.uid].toSet()
+            && newMembers().difference(members()).size() == 0)
+      );
+
+      allow delete: if signedIn() && resource.data.ownerId == request.auth.uid;
+
+      // Live locations: members can see them; each user writes only their own.
+      match /locations/{uid} {
+        function isGroupMember() {
+          return signedIn() && request.auth.uid in
+            get(/databases/$(database)/documents/groups/$(code)).data.memberIds;
+        }
+        allow read: if isGroupMember();
+        allow write: if isSelf(uid) && isGroupMember();
+      }
+    }
+  }
+}
