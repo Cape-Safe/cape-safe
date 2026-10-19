@@ -1,67 +1,46 @@
 import * as Location from "expo-location";
-import { AppleMaps, GoogleMaps, useLocationPermissions } from "expo-maps";
-import { useEffect, useMemo, useRef } from "react";
-import { Platform, StyleSheet, Text } from "react-native";
-import { buildHeatmapCircles } from "./Heatmap";
-import { getCapeTownCrimeHeatmapPoints } from "./crimeRiskScore";
+import { Platform, StyleSheet, Text, View } from "react-native";
 
-const cameraPosition = {
-  coordinates: { latitude: -33.9249, longitude: 18.4241 },
-  zoom: 12,
-};
+const AppleMaps = Platform.OS === "ios" ? require("expo-maps").AppleMaps : null;
+const GoogleMaps = Platform.OS === "android" ? require("expo-maps").GoogleMaps : null;
 
 export default function MapScreen() {
-  const [permission] = useLocationPermissions({ request: true });
-  const showUserLocation = permission?.granted ?? false;
-  const crimeHeatmapCircles = useMemo(
-    () => buildHeatmapCircles(getCapeTownCrimeHeatmapPoints()),
-    [],
+  const location = Location.useLastKnownLocation();
+
+  if (Platform.OS === "web" || (!AppleMaps && !GoogleMaps)) {
+    return (
+      <View style={styles.fallback}>
+        <Text style={styles.fallbackText}>
+          O mapa interativo está disponível apenas no aplicativo móvel.
+        </Text>
+      </View>
+    );
+  }
+
+  const MapView = Platform.OS === "ios" ? AppleMaps.View : GoogleMaps.View;
+
+  return (
+    <View style={styles.container}>
+      <MapView style={styles.map} />
+    </View>
   );
-
-  const googleMapRef = useRef<GoogleMaps.MapView>(null);
-  const appleMapRef = useRef<AppleMaps.MapView>(null);
-
-  useEffect(() => {
-    if (!showUserLocation) return;
-
-    Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced })
-      .then(({ coords }) => {
-        const camera = {
-          coordinates: {
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-          },
-          zoom: 15,
-        };
-        googleMapRef.current?.setCameraPosition(camera);
-        appleMapRef.current?.setCameraPosition(camera);
-      })
-      .catch(() => {});
-  }, [showUserLocation]);
-
-  if (Platform.OS === "ios") {
-    return (
-      <AppleMaps.View
-        ref={appleMapRef}
-        style={styles.map}
-        cameraPosition={cameraPosition}
-        properties={{ isMyLocationEnabled: showUserLocation }}
-        circles={crimeHeatmapCircles}
-      />
-    );
-  }
-  if (Platform.OS === "android") {
-    return (
-      <GoogleMaps.View
-        ref={googleMapRef}
-        style={styles.map}
-        cameraPosition={cameraPosition}
-        properties={{ isMyLocationEnabled: showUserLocation }}
-        circles={crimeHeatmapCircles}
-      />
-    );
-  }
-  return <Text>Maps are not available on web.</Text>;
 }
 
-const styles = StyleSheet.create({ map: { flex: 1 } });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+  },
+  fallback: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+  },
+  fallbackText: {
+    textAlign: "center",
+    fontSize: 16,
+  },
+});
