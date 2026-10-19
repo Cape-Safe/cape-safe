@@ -216,9 +216,12 @@ function distanceKm(
 }
 
 // SAPS data is per precinct, so each suburb takes its nearest station's risk.
+let suburbRiskCache: SuburbRisk[] | undefined;
+
 export function scoreSuburbRisk(): SuburbRisk[] {
+  if (suburbRiskCache) return suburbRiskCache;
   const stations = scoreStationRisk();
-  return suburbs.places.map((place) => {
+  suburbRiskCache = suburbs.places.map((place) => {
     let nearest = stations[0];
     let nearestKm = Infinity;
     for (const station of stations) {
@@ -236,6 +239,7 @@ export function scoreSuburbRisk(): SuburbRisk[] {
       risk: nearest.risk,
     };
   });
+  return suburbRiskCache;
 }
 
 // Ready to feed into buildHeatmapCircles() from ./Heatmap — risk becomes the
@@ -252,7 +256,7 @@ export type RiskFactor = {
   field: string;
   label: string;
   count: number;
-  contribution: number; // normalized(0-1) * weight — same basis as the score itself
+  contribution: number; // share of the violent/theft blend this crime accounts for
 };
 
 export type StationRiskDetail = StationRisk & {
@@ -275,12 +279,19 @@ export function getTopRiskFactors(
 
   const stations = crimeStats.stations as StationStats[];
   const ranges = buildFieldRanges(stations);
+  const sum = (w: Record<string, number>) =>
+    Object.values(w).reduce((a, b) => a + b, 0);
+  const violentTotal = sum(CRIME_WEIGHTS);
+  const theftTotal = sum(TOURIST_THEFT_WEIGHTS);
 
-  return Object.entries(CRIME_WEIGHTS)
-    .map(([field, weight]) => {
+  return Object.keys(CRIME_WEIGHTS)
+    .map((field) => {
       const count = rawValue(stats, field);
       const [lo, hi] = ranges[field];
       const normalized = hi > lo ? (count - lo) / (hi - lo) : 0;
+      const weight =
+        (VIOLENT_SHARE * CRIME_WEIGHTS[field]) / violentTotal +
+        ((1 - VIOLENT_SHARE) * (TOURIST_THEFT_WEIGHTS[field] ?? 0)) / theftTotal;
       return {
         field,
         label: CRIME_LABELS[field] ?? field,
@@ -302,6 +313,24 @@ export function getStationRiskDetail(
   if (!match) return undefined;
 
   return { ...match, topFactors: getTopRiskFactors(stationName) };
+}
+
+export type AreaRisk = StationRiskDetail & { suburb: string };
+
+// Risk for whatever is at a map point: the nearest suburb and its precinct.
+export function getAreaRiskAt(latitude: number, longitude: number): AreaRisk {
+  const point = { latitude, longitude };
+  let nearest = scoreSuburbRisk()[0];
+  let nearestKm = Infinity;
+  for (const suburb of scoreSuburbRisk()) {
+    const km = distanceKm(point, suburb);
+    if (km < nearestKm) {
+      nearest = suburb;
+      nearestKm = km;
+    }
+  }
+  const detail = getStationRiskDetail(nearest.station) ?? getHighestRiskStation();
+  return { ...detail, suburb: nearest.suburb };
 }
 
 // Fallback for a gauge/UI that isn't yet wired to "which area is the user
