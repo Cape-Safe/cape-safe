@@ -1,9 +1,19 @@
 import * as Location from "expo-location";
-import { AppleMaps, GoogleMaps, useLocationPermissions } from "expo-maps";
-import { useEffect, useMemo, useRef } from "react";
-import { Platform, StyleSheet, Text } from "react-native";
+import {
+  AppleMaps,
+  GoogleMaps,
+  useLocationPermissions,
+  type CameraMoveEvent,
+} from "expo-maps";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { buildHeatmapCircles } from "./Heatmap";
-import { getCapeTownCrimeHeatmapPoints } from "./crimeRiskScore";
+import RiskGauge from "./RiskGauge";
+import {
+  getAreaRiskAt,
+  getCapeTownCrimeHeatmapPoints,
+  type AreaRisk,
+} from "./crimeRiskScore";
 
 const cameraPosition = {
   coordinates: { latitude: -33.9249, longitude: 18.4241 },
@@ -17,6 +27,20 @@ export default function MapScreen() {
     () => buildHeatmapCircles(getCapeTownCrimeHeatmapPoints()),
     [],
   );
+
+  const [area, setArea] = useState<AreaRisk>(() =>
+    getAreaRiskAt(
+      cameraPosition.coordinates.latitude,
+      cameraPosition.coordinates.longitude,
+    ),
+  );
+  const onCameraMove = useCallback(({ coordinates }: CameraMoveEvent) => {
+    const { latitude, longitude } = coordinates;
+    if (latitude == null || longitude == null) return;
+    const next = getAreaRiskAt(latitude, longitude);
+    // fires continuously while panning; only re-render on a new suburb
+    setArea((prev) => (prev.suburb === next.suburb ? prev : next));
+  }, []);
 
   const googleMapRef = useRef<GoogleMaps.MapView>(null);
   const appleMapRef = useRef<AppleMaps.MapView>(null);
@@ -41,24 +65,32 @@ export default function MapScreen() {
 
   if (Platform.OS === "ios") {
     return (
-      <AppleMaps.View
-        ref={appleMapRef}
-        style={styles.map}
-        cameraPosition={cameraPosition}
-        properties={{ isMyLocationEnabled: showUserLocation }}
-        circles={crimeHeatmapCircles}
-      />
+      <View style={styles.map}>
+        <AppleMaps.View
+          ref={appleMapRef}
+          style={styles.map}
+          cameraPosition={cameraPosition}
+          properties={{ isMyLocationEnabled: showUserLocation }}
+          circles={crimeHeatmapCircles}
+          onCameraMove={onCameraMove}
+        />
+        <RiskGauge area={area} />
+      </View>
     );
   }
   if (Platform.OS === "android") {
     return (
-      <GoogleMaps.View
-        ref={googleMapRef}
-        style={styles.map}
-        cameraPosition={cameraPosition}
-        properties={{ isMyLocationEnabled: showUserLocation }}
-        circles={crimeHeatmapCircles}
-      />
+      <View style={styles.map}>
+        <GoogleMaps.View
+          ref={googleMapRef}
+          style={styles.map}
+          cameraPosition={cameraPosition}
+          properties={{ isMyLocationEnabled: showUserLocation }}
+          circles={crimeHeatmapCircles}
+          onCameraMove={onCameraMove}
+        />
+        <RiskGauge area={area} />
+      </View>
     );
   }
   return <Text>Maps are not available on web.</Text>;

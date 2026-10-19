@@ -1,8 +1,12 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { buildHeatmapCircles, type HeatmapCircle } from "./Heatmap";
-import { getCapeTownCrimeHeatmapPoints } from "./crimeRiskScore";
+import RiskGauge from "./RiskGauge";
+import { getAreaRiskAt, getCapeTownCrimeHeatmapPoints } from "./crimeRiskScore";
 
 // expo-maps has no web support, so web draws the heatmap with Leaflet.
+
+const CENTER_MESSAGE = "capesafe:map-center";
 
 const cameraPosition = {
   coordinates: { latitude: -33.9249, longitude: 18.4241 },
@@ -43,6 +47,13 @@ function buildLeafletHtml(circles: HeatmapCircle[]) {
   ).addTo(map);
   if (circles.length > 0) map.fitBounds(heatmap.getBounds(), { padding: [24, 24] });
 
+  const postCenter = () => {
+    const c = map.getCenter();
+    parent.postMessage({ type: "${CENTER_MESSAGE}", latitude: c.lat, longitude: c.lng }, "*");
+  };
+  map.on("moveend", postCenter);
+  postCenter();
+
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const here = [coords.latitude, coords.longitude];
@@ -59,13 +70,38 @@ export default function MapScreen() {
     () => buildLeafletHtml(buildHeatmapCircles(getCapeTownCrimeHeatmapPoints())),
     [],
   );
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  const [area, setArea] = useState(() =>
+    getAreaRiskAt(
+      cameraPosition.coordinates.latitude,
+      cameraPosition.coordinates.longitude,
+    ),
+  );
+
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (event.source !== frameRef.current?.contentWindow) return;
+      const { type, latitude, longitude } = event.data ?? {};
+      if (type !== CENTER_MESSAGE) return;
+      if (typeof latitude !== "number" || typeof longitude !== "number") return;
+      setArea(getAreaRiskAt(latitude, longitude));
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
 
   return (
-    <iframe
-      title="Cape Town crime-risk map"
-      srcDoc={html}
-      allow="geolocation"
-      style={{ border: 0, width: "100%", height: "100%", flex: 1 }}
-    />
+    <View style={styles.container}>
+      <iframe
+        ref={frameRef}
+        title="Cape Town crime-risk map"
+        srcDoc={html}
+        allow="geolocation"
+        style={{ border: 0, width: "100%", height: "100%", flex: 1 }}
+      />
+      <RiskGauge area={area} />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({ container: { flex: 1 } });

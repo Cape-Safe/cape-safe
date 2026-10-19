@@ -83,7 +83,9 @@ export default function RiskGauge({ area }: RiskGaugeProps) {
             ))}
           </View>
           <View style={[styles.badge, { top: badgeTop, backgroundColor: color }]}>
-            <Text style={styles.badgeText}>◂ {score}</Text>
+            <Text style={styles.badgeText} numberOfLines={1}>
+              ◂ {score}
+            </Text>
           </View>
         </Pressable>
       </View>
@@ -106,9 +108,6 @@ export default function RiskGauge({ area }: RiskGaugeProps) {
             ) : null}
             <Text style={[styles.cardRisk, { color }]}>
               {score}/100 · {riskLabel(detail.risk)}
-            </Text>
-            <Text style={styles.factorRow}>
-              Worse than {score}% of Cape Town&apos;s police precincts.
             </Text>
 
             {detail.topFactors.length > 0 ? (
@@ -190,8 +189,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: BAR_WIDTH + CAPSULE_PADDING + 4,
     height: BADGE_HEIGHT,
+    minWidth: 58,
     borderRadius: BADGE_HEIGHT / 2,
     paddingHorizontal: 9,
+    alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
     shadowOpacity: 0.2,
