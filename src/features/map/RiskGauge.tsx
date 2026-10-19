@@ -3,36 +3,21 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import {
   crimeRiskMeta,
   getHighestRiskStation,
+  type AreaRisk,
   type StationRiskDetail,
 } from "./crimeRiskScore";
+import { DEFAULT_GRADIENT, sampleGradient } from "./Heatmap";
 
-const BAR_WIDTH = 14;
-const BAR_HEIGHT = 130;
-const BAND_COUNT = 32;
+const BAR_WIDTH = 18;
+const BAR_HEIGHT = 180;
+const CAPSULE_PADDING = 10;
+const BAND_COUNT = 48;
+const BADGE_HEIGHT = 26;
 
-const GRADIENT_STOPS: { stop: number; color: [number, number, number] }[] = [
-  { stop: 0, color: [239, 68, 68] },
-  { stop: 0.5, color: [234, 179, 8] },
-  { stop: 1, color: [34, 197, 94] },
-];
-
-function lerp(a: number, b: number, t: number) {
-  return Math.round(a + (b - a) * t);
-}
-
-function sampleBand(t: number): string {
-  for (let i = 0; i < GRADIENT_STOPS.length - 1; i++) {
-    const a = GRADIENT_STOPS[i];
-    const b = GRADIENT_STOPS[i + 1];
-    if (t >= a.stop && t <= b.stop) {
-      const localT = (t - a.stop) / (b.stop - a.stop);
-      const [r1, g1, b1] = a.color;
-      const [r2, g2, b2] = b.color;
-      return `rgb(${lerp(r1, r2, localT)}, ${lerp(g1, g2, localT)}, ${lerp(b1, b2, localT)})`;
-    }
-  }
-  const last = GRADIENT_STOPS[GRADIENT_STOPS.length - 1].color;
-  return `rgb(${last[0]}, ${last[1]}, ${last[2]})`;
+// Same colour scale as the heatmap circles, so the badge matches the map.
+function riskColor(risk: number) {
+  const { r, g, b } = sampleGradient(DEFAULT_GRADIENT, risk);
+  return `rgb(${r}, ${g}, ${b})`;
 }
 
 function titleCase(name: string) {
@@ -51,44 +36,57 @@ function riskLabel(risk: number) {
 }
 
 type RiskGaugeProps = {
-  station?: StationRiskDetail;
+  area?: AreaRisk;
 };
 
-export default function RiskGauge({ station }: RiskGaugeProps) {
+export default function RiskGauge({ area }: RiskGaugeProps) {
   const [visible, setVisible] = useState(false);
-  const detail = station ?? getHighestRiskStation();
+  const detail: StationRiskDetail = area ?? getHighestRiskStation();
+  const suburb = area?.suburb;
 
+  // top of the bar = highest risk
   const bands = useMemo(
     () =>
       Array.from({ length: BAND_COUNT }, (_, i) =>
-        sampleBand(i / (BAND_COUNT - 1)),
+        riskColor(1 - i / (BAND_COUNT - 1)),
       ),
     [],
   );
 
-  const percent = Math.round(detail.risk * 100);
-
-  const markerTop = (1 - detail.risk) * BAR_HEIGHT;
-  const color = sampleBand(1 - detail.risk);
+  const score = Math.round(detail.risk * 100);
+  const color = riskColor(detail.risk);
+  const badgeTop =
+    CAPSULE_PADDING + (1 - detail.risk) * BAR_HEIGHT - BADGE_HEIGHT / 2;
 
   return (
     <>
-      <Pressable
-        onPress={() => setVisible(true)}
-        style={styles.capsule}
-        hitSlop={8}
-      >
-        <View style={styles.bar}>
-          {bands.map((c, i) => (
-            <View key={i} style={[styles.band, { backgroundColor: c }]} />
-          ))}
-          <View style={[styles.marker, { top: markerTop - 7 }]}>
-            <View style={[styles.badge, { borderColor: color }]}>
-              <Text style={[styles.badgeText, { color }]}>{percent}%</Text>
-            </View>
+      <View style={styles.container} pointerEvents="box-none">
+        <Pressable
+          onPress={() => setVisible(true)}
+          style={styles.infoButton}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="About this risk score"
+        >
+          <Text style={styles.infoText}>i</Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => setVisible(true)}
+          style={styles.capsule}
+          accessibilityRole="button"
+          accessibilityLabel={`Risk score ${score} out of 100${suburb ? ` for ${suburb}` : ""}`}
+        >
+          <View style={styles.bar}>
+            {bands.map((c, i) => (
+              <View key={i} style={[styles.band, { backgroundColor: c }]} />
+            ))}
           </View>
-        </View>
-      </Pressable>
+          <View style={[styles.badge, { top: badgeTop, backgroundColor: color }]}>
+            <Text style={styles.badgeText}>◂ {score}</Text>
+          </View>
+        </Pressable>
+      </View>
 
       <Modal
         visible={visible}
@@ -98,9 +96,19 @@ export default function RiskGauge({ station }: RiskGaugeProps) {
       >
         <Pressable style={styles.backdrop} onPress={() => setVisible(false)}>
           <Pressable style={styles.card} onPress={() => {}}>
-            <Text style={styles.cardTitle}>{titleCase(detail.station)}</Text>
+            <Text style={styles.cardTitle}>
+              {suburb ?? titleCase(detail.station)}
+            </Text>
+            {suburb ? (
+              <Text style={styles.cardPrecinct}>
+                {titleCase(detail.station)} police precinct
+              </Text>
+            ) : null}
             <Text style={[styles.cardRisk, { color }]}>
-              {percent}% · {riskLabel(detail.risk)}
+              {score}/100 · {riskLabel(detail.risk)}
+            </Text>
+            <Text style={styles.factorRow}>
+              Worse than {score}% of Cape Town&apos;s police precincts.
             </Text>
 
             {detail.topFactors.length > 0 ? (
@@ -135,16 +143,36 @@ export default function RiskGauge({ station }: RiskGaugeProps) {
 }
 
 const styles = StyleSheet.create({
-  capsule: {
+  container: {
     position: "absolute",
     left: 16,
-    bottom: 16,
+    bottom: 24,
+    alignItems: "center",
+    gap: 10,
+  },
+  infoButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: "#6b7280",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  infoText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#6b7280",
+    fontStyle: "italic",
+  },
+  capsule: {
     backgroundColor: "#ffffff",
-    borderRadius: BAR_WIDTH,
-    padding: 6,
+    borderRadius: (BAR_WIDTH + CAPSULE_PADDING * 2) / 2,
+    padding: CAPSULE_PADDING,
     shadowColor: "#000",
     shadowOpacity: 0.2,
-    shadowRadius: 6,
+    shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     elevation: 4,
   },
@@ -158,24 +186,23 @@ const styles = StyleSheet.create({
     width: BAR_WIDTH,
     height: BAR_HEIGHT / BAND_COUNT,
   },
-  marker: {
-    position: "absolute",
-    left: -6,
-    right: -6,
-    alignItems: "flex-end",
-  },
   badge: {
     position: "absolute",
-    left: BAR_WIDTH + 4,
-    backgroundColor: "#ffffff",
-    borderWidth: 2,
-    borderRadius: 10,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    left: BAR_WIDTH + CAPSULE_PADDING + 4,
+    height: BADGE_HEIGHT,
+    borderRadius: BADGE_HEIGHT / 2,
+    paddingHorizontal: 9,
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 1 },
+    elevation: 3,
   },
   badgeText: {
-    fontSize: 11,
-    fontWeight: "700",
+    fontSize: 14,
+    fontWeight: "800",
+    color: "#ffffff",
   },
   backdrop: {
     flex: 1,
@@ -196,16 +223,22 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#111827",
   },
+  cardPrecinct: {
+    fontSize: 13,
+    color: "#6b7280",
+    marginTop: 2,
+  },
   cardRisk: {
     fontSize: 15,
     fontWeight: "700",
-    marginTop: 4,
-    marginBottom: 12,
+    marginTop: 8,
+    marginBottom: 4,
   },
   cardSubheading: {
     fontSize: 13,
     fontWeight: "600",
     color: "#6b7280",
+    marginTop: 12,
     marginBottom: 4,
   },
   factorRow: {
