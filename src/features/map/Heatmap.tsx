@@ -61,9 +61,9 @@ export function buildHeatmapCircles(
 ): HeatmapCircle[] {
   if (points.length === 0) return [];
 
-  const radius = options?.radius ?? 600;
+  const radius = options?.radius ?? 1600;
   const gradient = options?.gradient ?? DEFAULT_GRADIENT;
-  const opacity = options?.opacity ?? 0.7;
+  const opacity = options?.opacity ?? 1;
 
   const maxIntensity = Math.max(...points.map((p) => p.intensity ?? 1));
   const circles: HeatmapCircle[] = [];
@@ -73,14 +73,13 @@ export function buildHeatmapCircles(
     const t = maxIntensity > 0 ? intensity / maxIntensity : 0;
     const { r, g, b } = sampleGradient(gradient, t);
     const center = { latitude: point.latitude, longitude: point.longitude };
-    const pointRadius = radius * (0.4 + 0.6 * t);
 
     // outer soft ring + denser inner core approximates the Gaussian blur
     // GMUHeatmapTileLayer produces natively
     circles.push({
       id: `heat-${index}-outer`,
       center,
-      radius: pointRadius,
+      radius,
       color: `rgba(${r}, ${g}, ${b}, ${(0.18 * opacity).toFixed(3)})`,
       lineColor: "transparent",
       lineWidth: 0,
@@ -88,7 +87,7 @@ export function buildHeatmapCircles(
     circles.push({
       id: `heat-${index}-inner`,
       center,
-      radius: pointRadius * 0.45,
+      radius: radius * 0.45,
       color: `rgba(${r}, ${g}, ${b}, ${(0.4 * opacity).toFixed(3)})`,
       lineColor: "transparent",
       lineWidth: 0,

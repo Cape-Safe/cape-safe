@@ -1,0 +1,2536 @@
+{
+ "source": "OpenStreetMap place features (suburb, town, village, quarter; neighbourhood/hamlet only where no suburb lies within 1 km) inside the City of Cape Town boundary, via the Overpass API. Areas use their centre point. © OpenStreetMap contributors, ODbL. Regenerate with: node scripts/fetch-suburbs.js",
+ "fetched": "2026-10-19",
+ "places": [
+  {
+   "name": "Acacia Park",
+   "latitude": -33.89167,
+   "longitude": 18.5275
+  },
+  {
+   "name": "Alora",
+   "latitude": -33.93917,
+   "longitude": 18.67139
+  },
+  {
+   "name": "Amanda Glen",
+   "latitude": -33.85278,
+   "longitude": 18.65972
+  },
+  {
+   "name": "Amandelrug",
+   "latitude": -33.92389,
+   "longitude": 18.69278
+  },
+  {
+   "name": "Arauna",
+   "latitude": -33.86933,
+   "longitude": 18.6865
+  },
+  {
+   "name": "Athlone",
+   "latitude": -33.96667,
+   "longitude": 18.505
+  },
+  {
+   "name": "Atlantis",
+   "latitude": -33.56722,
+   "longitude": 18.50028
+  },
+  {
+   "name": "Atlas Gardens Business Park",
+   "latitude": -33.816,
+   "longitude": 18.55465
+  },
+  {
+   "name": "Audas Estate",
+   "latitude": -34.08222,
+   "longitude": 18.84472
+  },
+  {
+   "name": "Aurora",
+   "latitude": -33.83028,
+   "longitude": 18.63194
+  },
+  {
+   "name": "Avondale",
+   "latitude": -33.56639,
+   "longitude": 18.48471
+  },
+  {
+   "name": "Bakoven",
+   "latitude": -33.96,
+   "longitude": 18.38278
+  },
+  {
+   "name": "Bantry Bay",
+   "latitude": -33.92815,
+   "longitude": 18.37897
+  },
+  {
+   "name": "Barnet Molokwana Corner",
+   "latitude": -34.02096,
+   "longitude": 18.67196
+  },
+  {
+   "name": "Baronetcy Estate",
+   "latitude": -33.86015,
+   "longitude": 18.57856
+  },
+  {
+   "name": "Beacon Hill",
+   "latitude": -33.55805,
+   "longitude": 18.50444
+  },
+  {
+   "name": "Beaconvale",
+   "latitude": -33.91651,
+   "longitude": 18.58408
+  },
+  {
+   "name": "Beaulieu",
+   "latitude": -34.09814,
+   "longitude": 18.85767
+  },
+  {
+   "name": "Belgravia",
+   "latitude": -33.90111,
+   "longitude": 18.65
+  },
+  {
+   "name": "Belhar",
+   "latitude": -33.94472,
+   "longitude": 18.62583
+  },
+  {
+   "name": "Bell Glen",
+   "latitude": -34.05906,
+   "longitude": 18.75303
+  },
+  {
+   "name": "Bellair",
+   "latitude": -33.88583,
+   "longitude": 18.6625
+  },
+  {
+   "name": "Bellaire",
+   "latitude": -34.04972,
+   "longitude": 18.8225
+  },
+  {
+   "name": "Belle Ombre",
+   "latitude": -34.0125,
+   "longitude": 18.42889
+  },
+  {
+   "name": "Bellville",
+   "latitude": -33.88317,
+   "longitude": 18.6277
+  },
+  {
+   "name": "Bellville South",
+   "latitude": -33.91611,
+   "longitude": 18.64444
+  },
+  {
+   "name": "Belmont Park",
+   "latitude": -33.84472,
+   "longitude": 18.73333
+  },
+  {
+   "name": "Belthorn",
+   "latitude": -33.98111,
+   "longitude": 18.51556
+  },
+  {
+   "name": "Belthorn Estate",
+   "latitude": -33.98484,
+   "longitude": 18.51552
+  },
+  {
+   "name": "Bergsig",
+   "latitude": -33.8193,
+   "longitude": 18.66053
+  },
+  {
+   "name": "Bergvliet",
+   "latitude": -34.0448,
+   "longitude": 18.45283
+  },
+  {
+   "name": "Bethanie",
+   "latitude": -33.85825,
+   "longitude": 18.65815
+  },
+  {
+   "name": "Bishop Lavis",
+   "latitude": -33.94861,
+   "longitude": 18.57583
+  },
+  {
+   "name": "Bishopscourt",
+   "latitude": -33.98861,
+   "longitude": 18.44667
+  },
+  {
+   "name": "Blackheath",
+   "latitude": -33.95833,
+   "longitude": 18.70278
+  },
+  {
+   "name": "Bloekombos",
+   "latitude": -33.84167,
+   "longitude": 18.73333
+  },
+  {
+   "name": "Bloemhof",
+   "latitude": -33.87944,
+   "longitude": 18.64889
+  },
+  {
+   "name": "Blomtuin",
+   "latitude": -33.88333,
+   "longitude": 18.65056
+  },
+  {
+   "name": "Blomvlei",
+   "latitude": -33.87944,
+   "longitude": 18.62056
+  },
+  {
+   "name": "Blouberg",
+   "latitude": -33.80723,
+   "longitude": 18.47898
+  },
+  {
+   "name": "Blouberg Hill Estate",
+   "latitude": -33.78631,
+   "longitude": 18.46213
+  },
+  {
+   "name": "Blouberg Rise",
+   "latitude": -33.81306,
+   "longitude": 18.48611
+  },
+  {
+   "name": "Bloubergrant",
+   "latitude": -33.81639,
+   "longitude": 18.47861
+  },
+  {
+   "name": "Bloubergstrand",
+   "latitude": -33.79734,
+   "longitude": 18.46102
+  },
+  {
+   "name": "Blue Downs",
+   "latitude": -34,
+   "longitude": 18.6975
+  },
+  {
+   "name": "Bo-Kaap",
+   "latitude": -33.92043,
+   "longitude": 18.41344
+  },
+  {
+   "name": "Bo-Kaap (Schotschekloof)",
+   "latitude": -33.91989,
+   "longitude": 18.41215
+  },
+  {
+   "name": "Bokkemanskloof",
+   "latitude": -34.02046,
+   "longitude": 18.38146
+  },
+  {
+   "name": "Bonnie Brae",
+   "latitude": -33.83333,
+   "longitude": 18.7
+  },
+  {
+   "name": "Bonteheuwel",
+   "latitude": -33.94917,
+   "longitude": 18.55306
+  },
+  {
+   "name": "Boquinar Industrial Area",
+   "latitude": -33.97065,
+   "longitude": 18.58453
+  },
+  {
+   "name": "Bosbell",
+   "latitude": -33.89493,
+   "longitude": 18.62211
+  },
+  {
+   "name": "Bosonia",
+   "latitude": -33.92861,
+   "longitude": 18.685
+  },
+  {
+   "name": "Boston",
+   "latitude": -33.89139,
+   "longitude": 18.61944
+  },
+  {
+   "name": "Bothasig",
+   "latitude": -33.85944,
+   "longitude": 18.54111
+  },
+  {
+   "name": "Bracken Heights",
+   "latitude": -33.87417,
+   "longitude": 18.67889
+  },
+  {
+   "name": "Brackenfell",
+   "latitude": -33.88306,
+   "longitude": 18.7
+  },
+  {
+   "name": "Brantwood",
+   "latitude": -33.92333,
+   "longitude": 18.67389
+  },
+  {
+   "name": "Brentwood Park",
+   "latitude": -33.98333,
+   "longitude": 18.65833
+  },
+  {
+   "name": "Bridgetown",
+   "latitude": -33.95639,
+   "longitude": 18.53056
+  },
+  {
+   "name": "Briza",
+   "latitude": -34.07278,
+   "longitude": 18.84222
+  },
+  {
+   "name": "Broadlands Village",
+   "latitude": -34.1248,
+   "longitude": 18.85551
+  },
+  {
+   "name": "Brooklyn",
+   "latitude": -33.90889,
+   "longitude": 18.47917
+  },
+  {
+   "name": "Burgundy Estate",
+   "latitude": -33.84064,
+   "longitude": 18.55057
+  },
+  {
+   "name": "Cafda Village",
+   "latitude": -34.06083,
+   "longitude": 18.48444
+  },
+  {
+   "name": "Camelot",
+   "latitude": -33.95833,
+   "longitude": 18.66667
+  },
+  {
+   "name": "Camps Bay",
+   "latitude": -33.95491,
+   "longitude": 18.38188
+  },
+  {
+   "name": "Cape Heritage",
+   "latitude": -34.09967,
+   "longitude": 18.85865
+  },
+  {
+   "name": "Capri",
+   "latitude": -34.13528,
+   "longitude": 18.38667
+  },
+  {
+   "name": "Capricorn",
+   "latitude": -34.09381,
+   "longitude": 18.48764
+  },
+  {
+   "name": "Casablanca",
+   "latitude": -34.13679,
+   "longitude": 18.86254
+  },
+  {
+   "name": "Century City",
+   "latitude": -33.88916,
+   "longitude": 18.51312
+  },
+  {
+   "name": "Chantecler",
+   "latitude": -33.85944,
+   "longitude": 18.66055
+  },
+  {
+   "name": "Chapman's Peak",
+   "latitude": -34.09961,
+   "longitude": 18.36444
+  },
+  {
+   "name": "Chrismar",
+   "latitude": -33.89222,
+   "longitude": 18.64694
+  },
+  {
+   "name": "Churchill Estate",
+   "latitude": -33.89881,
+   "longitude": 18.57752
+  },
+  {
+   "name": "City Centre",
+   "latitude": -33.92439,
+   "longitude": 18.42006
+  },
+  {
+   "name": "Clamhall",
+   "latitude": -33.89677,
+   "longitude": 18.58923
+  },
+  {
+   "name": "Claremont",
+   "latitude": -33.98472,
+   "longitude": 18.4625
+  },
+  {
+   "name": "Clifton",
+   "latitude": -33.93528,
+   "longitude": 18.37907
+  },
+  {
+   "name": "Clovelly",
+   "latitude": -34.12483,
+   "longitude": 18.4332
+  },
+  {
+   "name": "Colorado Park",
+   "latitude": -34.02593,
+   "longitude": 18.58772
+  },
+  {
+   "name": "Constantia",
+   "latitude": -34.02833,
+   "longitude": 18.41556
+  },
+  {
+   "name": "Cravenby",
+   "latitude": -33.92472,
+   "longitude": 18.59167
+  },
+  {
+   "name": "Crawford",
+   "latitude": -33.9775,
+   "longitude": 18.50333
+  },
+  {
+   "name": "Crofter's Valley",
+   "latitude": -34.10644,
+   "longitude": 18.38577
+  },
+  {
+   "name": "Crossroads",
+   "latitude": -33.99444,
+   "longitude": 18.59889
+  },
+  {
+   "name": "Croydon Olive Estate",
+   "latitude": -34.04467,
+   "longitude": 18.75493
+  },
+  {
+   "name": "Da Gama Park",
+   "latitude": -34.1561,
+   "longitude": 18.40298
+  },
+  {
+   "name": "De Bron",
+   "latitude": -33.85865,
+   "longitude": 18.63142
+  },
+  {
+   "name": "De Duin",
+   "latitude": -33.88496,
+   "longitude": 18.57061
+  },
+  {
+   "name": "De Kuilen",
+   "latitude": -33.93056,
+   "longitude": 18.68
+  },
+  {
+   "name": "De Tijger",
+   "latitude": -33.88978,
+   "longitude": 18.59446
+  },
+  {
+   "name": "De Tuin",
+   "latitude": -33.85833,
+   "longitude": 18.69167
+  },
+  {
+   "name": "De Wijnlanden Estate",
+   "latitude": -34.01702,
+   "longitude": 18.74254
+  },
+  {
+   "name": "Delft",
+   "latitude": -33.96556,
+   "longitude": 18.64444
+  },
+  {
+   "name": "Delft South",
+   "latitude": -33.99103,
+   "longitude": 18.63354
+  },
+  {
+   "name": "Dennemere",
+   "latitude": -33.98083,
+   "longitude": 18.70528
+  },
+  {
+   "name": "Dennendal",
+   "latitude": -34.05566,
+   "longitude": 18.44111
+  },
+  {
+   "name": "Deurdrif",
+   "latitude": -34.02083,
+   "longitude": 18.45833
+  },
+  {
+   "name": "Devon Park",
+   "latitude": -34.00889,
+   "longitude": 18.72832
+  },
+  {
+   "name": "Dido Valley",
+   "latitude": -34.17,
+   "longitude": 18.42778
+  },
+  {
+   "name": "Die Bos",
+   "latitude": -34.10611,
+   "longitude": 18.84472
+  },
+  {
+   "name": "Die Rif",
+   "latitude": -33.87722,
+   "longitude": 18.60278
+  },
+  {
+   "name": "Die Vlakte",
+   "latitude": -34.09861,
+   "longitude": 18.83333
+  },
+  {
+   "name": "Die Wingerd",
+   "latitude": -34.06694,
+   "longitude": 18.83083
+  },
+  {
+   "name": "Diep River",
+   "latitude": -34.03598,
+   "longitude": 18.46905
+  },
+  {
+   "name": "Dieprivier",
+   "latitude": -34.0375,
+   "longitude": 18.46611
+  },
+  {
+   "name": "District Six",
+   "latitude": -33.93255,
+   "longitude": 18.43505
+  },
+  {
+   "name": "Dobson",
+   "latitude": -34.15122,
+   "longitude": 18.86775
+  },
+  {
+   "name": "Door De Kraal",
+   "latitude": -33.86564,
+   "longitude": 18.62651
+  },
+  {
+   "name": "Du Noon",
+   "latitude": -33.81638,
+   "longitude": 18.54167
+  },
+  {
+   "name": "Durbanville",
+   "latitude": -33.84028,
+   "longitude": 18.64944
+  },
+  {
+   "name": "Durbanville Hills",
+   "latitude": -33.84806,
+   "longitude": 18.63861
+  },
+  {
+   "name": "Durmonte",
+   "latitude": -33.81072,
+   "longitude": 18.66732
+  },
+  {
+   "name": "Duynefontein",
+   "latitude": -33.69,
+   "longitude": 18.44917
+  },
+  {
+   "name": "East Rock",
+   "latitude": -33.87061,
+   "longitude": 18.66432
+  },
+  {
+   "name": "Eastridge",
+   "latitude": -34.04984,
+   "longitude": 18.6303
+  },
+  {
+   "name": "Eden Park",
+   "latitude": -33.87079,
+   "longitude": 18.67922
+  },
+  {
+   "name": "Edgemead",
+   "latitude": -33.87557,
+   "longitude": 18.53995
+  },
+  {
+   "name": "Eersterivier",
+   "latitude": -34,
+   "longitude": 18.72167
+  },
+  {
+   "name": "Eersterivier Suid",
+   "latitude": -34.02389,
+   "longitude": 18.72972
+  },
+  {
+   "name": "Eikendal",
+   "latitude": -33.85,
+   "longitude": 18.72889
+  },
+  {
+   "name": "Eindhoven",
+   "latitude": -33.975,
+   "longitude": 18.64167
+  },
+  {
+   "name": "Ekuphumuleni",
+   "latitude": -34.04261,
+   "longitude": 18.67077
+  },
+  {
+   "name": "Electric City",
+   "latitude": -34.01628,
+   "longitude": 18.71221
+  },
+  {
+   "name": "Elfindale",
+   "latitude": -34.04158,
+   "longitude": 18.47681
+  },
+  {
+   "name": "Elsiesriver",
+   "latitude": -33.93083,
+   "longitude": 18.58639
+  },
+  {
+   "name": "Endlovini",
+   "latitude": -34.06259,
+   "longitude": 18.66818
+  },
+  {
+   "name": "Enkanini",
+   "latitude": -34.05936,
+   "longitude": 18.70255
+  },
+  {
+   "name": "Epping Forest",
+   "latitude": -33.93389,
+   "longitude": 18.57528
+  },
+  {
+   "name": "Epping Industria 1",
+   "latitude": -33.93337,
+   "longitude": 18.53458
+  },
+  {
+   "name": "Epping Industria 2",
+   "latitude": -33.93417,
+   "longitude": 18.55444
+  },
+  {
+   "name": "Eureka",
+   "latitude": -33.93611,
+   "longitude": 18.59056
+  },
+  {
+   "name": "Eversdal",
+   "latitude": -33.86167,
+   "longitude": 18.64861
+  },
+  {
+   "name": "Eversdal Heights",
+   "latitude": -33.85164,
+   "longitude": 18.64805
+  },
+  {
+   "name": "Eyethu",
+   "latitude": -34.0344,
+   "longitude": 18.67167
+  },
+  {
+   "name": "Fairfield Estate",
+   "latitude": -33.89978,
+   "longitude": 18.59326
+  },
+  {
+   "name": "Fir Grove",
+   "latitude": -34.04444,
+   "longitude": 18.43194
+  },
+  {
+   "name": "Firgrove",
+   "latitude": -34.05583,
+   "longitude": 18.78639
+  },
+  {
+   "name": "Fish Hoek",
+   "latitude": -34.13321,
+   "longitude": 18.42843
+  },
+  {
+   "name": "Flamingo Vlei",
+   "latitude": -33.83092,
+   "longitude": 18.49173
+  },
+  {
+   "name": "Foreshore",
+   "latitude": -33.92295,
+   "longitude": 18.43824
+  },
+  {
+   "name": "Forest Village",
+   "latitude": -34.00667,
+   "longitude": 18.71389
+  },
+  {
+   "name": "Fresnaye",
+   "latitude": -33.92519,
+   "longitude": 18.38774
+  },
+  {
+   "name": "Gardens",
+   "latitude": -33.93278,
+   "longitude": 18.40972
+  },
+  {
+   "name": "Gatesville",
+   "latitude": -33.9764,
+   "longitude": 18.53275
+  },
+  {
+   "name": "Gaylee",
+   "latitude": -33.97583,
+   "longitude": 18.70167
+  },
+  {
+   "name": "Gersham",
+   "latitude": -33.94497,
+   "longitude": 18.67603
+  },
+  {
+   "name": "Gleemoor",
+   "latitude": -33.96444,
+   "longitude": 18.51361
+  },
+  {
+   "name": "Glen Dirk",
+   "latitude": -33.99806,
+   "longitude": 18.44306
+  },
+  {
+   "name": "Glen Ive",
+   "latitude": -33.87222,
+   "longitude": 18.66194
+  },
+  {
+   "name": "Glencairn",
+   "latitude": -34.15954,
+   "longitude": 18.4285
+  },
+  {
+   "name": "Glencairn Heights",
+   "latitude": -34.15377,
+   "longitude": 18.42924
+  },
+  {
+   "name": "Glenhaven",
+   "latitude": -33.91972,
+   "longitude": 18.65806
+  },
+  {
+   "name": "Glenlily",
+   "latitude": -33.90339,
+   "longitude": 18.58064
+  },
+  {
+   "name": "Glenwood",
+   "latitude": -33.89627,
+   "longitude": 18.53589
+  },
+  {
+   "name": "Goede Hoop Estate",
+   "latitude": -34.0928,
+   "longitude": 18.3786
+  },
+  {
+   "name": "Goedemoed",
+   "latitude": -33.82611,
+   "longitude": 18.67278
+  },
+  {
+   "name": "Golden Acre",
+   "latitude": -34.07556,
+   "longitude": 18.86444
+  },
+  {
+   "name": "Golden Hill",
+   "latitude": -34.06667,
+   "longitude": 18.86472
+  },
+  {
+   "name": "Good Hope",
+   "latitude": -34.05198,
+   "longitude": 18.65423
+  },
+  {
+   "name": "Goodrail",
+   "latitude": -33.91237,
+   "longitude": 18.55786
+  },
+  {
+   "name": "Goodwood",
+   "latitude": -33.90667,
+   "longitude": 18.54917
+  },
+  {
+   "name": "Goodwood Estate",
+   "latitude": -33.90498,
+   "longitude": 18.55097
+  },
+  {
+   "name": "Goodwood Ext. 1",
+   "latitude": -33.9018,
+   "longitude": 18.5454
+  },
+  {
+   "name": "Gordon's Bay",
+   "latitude": -34.16112,
+   "longitude": 18.86869
+  },
+  {
+   "name": "Graceland",
+   "latitude": -34.04378,
+   "longitude": 18.6757
+  },
+  {
+   "name": "Grassy Park",
+   "latitude": -34.04513,
+   "longitude": 18.50325
+  },
+  {
+   "name": "Green Point",
+   "latitude": -33.90426,
+   "longitude": 18.40597
+  },
+  {
+   "name": "Guguletu",
+   "latitude": -33.98222,
+   "longitude": 18.56833
+  },
+  {
+   "name": "Gustrouw",
+   "latitude": -34.13465,
+   "longitude": 18.85318
+  },
+  {
+   "name": "Hagley",
+   "latitude": -33.96444,
+   "longitude": 18.68028
+  },
+  {
+   "name": "Hangberg",
+   "latitude": -34.04634,
+   "longitude": 18.34036
+  },
+  {
+   "name": "Hanover Park",
+   "latitude": -33.99222,
+   "longitude": 18.53306
+  },
+  {
+   "name": "Harare",
+   "latitude": -34.05769,
+   "longitude": 18.67349
+  },
+  {
+   "name": "Harbour Heights",
+   "latitude": -34.0563,
+   "longitude": 18.34132
+  },
+  {
+   "name": "Hardekraaltjie",
+   "latitude": -33.90373,
+   "longitude": 18.61812
+  },
+  {
+   "name": "Hatton",
+   "latitude": -33.97993,
+   "longitude": 18.53468
+  },
+  {
+   "name": "Hazendal",
+   "latitude": -33.95278,
+   "longitude": 18.50444
+  },
+  {
+   "name": "Heathfield",
+   "latitude": -34.05,
+   "longitude": 18.46806
+  },
+  {
+   "name": "Heideveld",
+   "latitude": -33.96417,
+   "longitude": 18.54889
+  },
+  {
+   "name": "Helderberg",
+   "latitude": -34.04944,
+   "longitude": 18.83444
+  },
+  {
+   "name": "Helderberg Manor",
+   "latitude": -34.09979,
+   "longitude": 18.8646
+  },
+  {
+   "name": "Helderberg Village",
+   "latitude": -34.04516,
+   "longitude": 18.81899
+  },
+  {
+   "name": "Helderrand",
+   "latitude": -34.06361,
+   "longitude": 18.86083
+  },
+  {
+   "name": "Heldervue",
+   "latitude": -34.06,
+   "longitude": 18.82167
+  },
+  {
+   "name": "Helderzicht",
+   "latitude": -34.08889,
+   "longitude": 18.83194
+  },
+  {
+   "name": "Helena Heights",
+   "latitude": -34.05722,
+   "longitude": 18.83611
+  },
+  {
+   "name": "Helgarda",
+   "latitude": -34.02895,
+   "longitude": 18.34751
+  },
+  {
+   "name": "Heritage Close",
+   "latitude": -34.09747,
+   "longitude": 18.85873
+  },
+  {
+   "name": "Heritage Manor",
+   "latitude": -34.09675,
+   "longitude": 18.86198
+  },
+  {
+   "name": "Heritage Mews",
+   "latitude": -34.09671,
+   "longitude": 18.85838
+  },
+  {
+   "name": "Heritage Villas",
+   "latitude": -34.0993,
+   "longitude": 18.8558
+  },
+  {
+   "name": "Hideaways Cape Point Hideaway",
+   "latitude": -34.18597,
+   "longitude": 18.38169
+  },
+  {
+   "name": "High Constantia",
+   "latitude": -34.02562,
+   "longitude": 18.42311
+  },
+  {
+   "name": "Highbury",
+   "latitude": -33.94729,
+   "longitude": 18.67921
+  },
+  {
+   "name": "Hoheizen",
+   "latitude": -33.88306,
+   "longitude": 18.62083
+  },
+  {
+   "name": "Hout Bay",
+   "latitude": -34.04309,
+   "longitude": 18.35564
+  },
+  {
+   "name": "Ilitha Park",
+   "latitude": -34.04915,
+   "longitude": 18.66271
+  },
+  {
+   "name": "Imizamo Yethu",
+   "latitude": -34.02881,
+   "longitude": 18.36192
+  },
+  {
+   "name": "Jagtershof",
+   "latitude": -33.94167,
+   "longitude": 18.7
+  },
+  {
+   "name": "Jakarandas",
+   "latitude": -33.93287,
+   "longitude": 18.70363
+  },
+  {
+   "name": "Joe Slovo Park",
+   "latitude": -33.8736,
+   "longitude": 18.5105
+  },
+  {
+   "name": "Joostenbergvlakte",
+   "latitude": -33.82861,
+   "longitude": 18.73272
+  },
+  {
+   "name": "Kaapzicht",
+   "latitude": -33.88294,
+   "longitude": 18.56574
+  },
+  {
+   "name": "Kalkbaai",
+   "latitude": -34.12713,
+   "longitude": 18.44838
+  },
+  {
+   "name": "Kalksteenfontein",
+   "latitude": -33.95028,
+   "longitude": 18.56556
+  },
+  {
+   "name": "Kanonberg",
+   "latitude": -33.86005,
+   "longitude": 18.59516
+  },
+  {
+   "name": "Kelderhof Estate",
+   "latitude": -34.03743,
+   "longitude": 18.76195
+  },
+  {
+   "name": "Kenilworth",
+   "latitude": -33.99417,
+   "longitude": 18.46833
+  },
+  {
+   "name": "Kenridge",
+   "latitude": -33.85806,
+   "longitude": 18.63722
+  },
+  {
+   "name": "Kenrock Country Estate",
+   "latitude": -34.01361,
+   "longitude": 18.37199
+  },
+  {
+   "name": "Kensington",
+   "latitude": -33.91444,
+   "longitude": 18.50694
+  },
+  {
+   "name": "Kewtown",
+   "latitude": -33.95944,
+   "longitude": 18.5175
+  },
+  {
+   "name": "Khaya",
+   "latitude": -34.03674,
+   "longitude": 18.6598
+  },
+  {
+   "name": "Khayelitsha",
+   "latitude": -34.04059,
+   "longitude": 18.66742
+  },
+  {
+   "name": "Killarney Gardens",
+   "latitude": -33.82545,
+   "longitude": 18.53345
+  },
+  {
+   "name": "Kirstenhof",
+   "latitude": -34.07167,
+   "longitude": 18.45056
+  },
+  {
+   "name": "Klaassenbosch",
+   "latitude": -33.99917,
+   "longitude": 18.43194
+  },
+  {
+   "name": "Kleinbosch",
+   "latitude": -33.86122,
+   "longitude": 18.56139
+  },
+  {
+   "name": "Kleinvlei",
+   "latitude": -33.98583,
+   "longitude": 18.71444
+  },
+  {
+   "name": "Klipfontein",
+   "latitude": -34.0025,
+   "longitude": 18.62167
+  },
+  {
+   "name": "Klipkop",
+   "latitude": -33.9115,
+   "longitude": 18.60366
+  },
+  {
+   "name": "Koeberg",
+   "latitude": -33.6775,
+   "longitude": 18.43889
+  },
+  {
+   "name": "Kommetjie",
+   "latitude": -34.13986,
+   "longitude": 18.32699
+  },
+  {
+   "name": "Kraaifontein",
+   "latitude": -33.84778,
+   "longitude": 18.71611
+  },
+  {
+   "name": "Kraaifontein East",
+   "latitude": -33.84309,
+   "longitude": 18.73965
+  },
+  {
+   "name": "Kuilsrivier",
+   "latitude": -33.92694,
+   "longitude": 18.68556
+  },
+  {
+   "name": "Kuyasa",
+   "latitude": -34.0603,
+   "longitude": 18.68869
+  },
+  {
+   "name": "La Rochelle",
+   "latitude": -33.88083,
+   "longitude": 18.65639
+  },
+  {
+   "name": "Labiance",
+   "latitude": -33.91194,
+   "longitude": 18.65917
+  },
+  {
+   "name": "Lagoon Beach",
+   "latitude": -33.89279,
+   "longitude": 18.48238
+  },
+  {
+   "name": "Lake Michelle",
+   "latitude": -34.11891,
+   "longitude": 18.37812
+  },
+  {
+   "name": "Lakeside",
+   "latitude": -34.08722,
+   "longitude": 18.45694
+  },
+  {
+   "name": "Land en Zeezicht",
+   "latitude": -34.07306,
+   "longitude": 18.875
+  },
+  {
+   "name": "Langa",
+   "latitude": -33.94556,
+   "longitude": 18.53
+  },
+  {
+   "name": "Langeberg Ridge",
+   "latitude": -33.84215,
+   "longitude": 18.69141
+  },
+  {
+   "name": "Lansdowne",
+   "latitude": -33.99634,
+   "longitude": 18.50689
+  },
+  {
+   "name": "Lavender Hill",
+   "latitude": -34.07361,
+   "longitude": 18.48333
+  },
+  {
+   "name": "Lentegeur",
+   "latitude": -34.03139,
+   "longitude": 18.61194
+  },
+  {
+   "name": "Llandudno",
+   "latitude": -34.00859,
+   "longitude": 18.34423
+  },
+  {
+   "name": "Loevenstein",
+   "latitude": -33.88556,
+   "longitude": 18.60639
+  },
+  {
+   "name": "Longdown Estate",
+   "latitude": -34.09167,
+   "longitude": 18.85561
+  },
+  {
+   "name": "Longkloof",
+   "latitude": -34.01026,
+   "longitude": 18.38563
+  },
+  {
+   "name": "Lotus River",
+   "latitude": -34.04306,
+   "longitude": 18.52139
+  },
+  {
+   "name": "Lwandle",
+   "latitude": -34.12222,
+   "longitude": 18.86889
+  },
+  {
+   "name": "Lynn's View",
+   "latitude": -34.05333,
+   "longitude": 18.82194
+  },
+  {
+   "name": "Mabille Park",
+   "latitude": -33.91833,
+   "longitude": 18.67083
+  },
+  {
+   "name": "Macassar",
+   "latitude": -34.06612,
+   "longitude": 18.7675
+  },
+  {
+   "name": "Maitland",
+   "latitude": -33.9225,
+   "longitude": 18.49306
+  },
+  {
+   "name": "Maitland Garden Village",
+   "latitude": -33.93528,
+   "longitude": 18.48889
+  },
+  {
+   "name": "Malibu Village",
+   "latitude": -33.99528,
+   "longitude": 18.69222
+  },
+  {
+   "name": "Mamre",
+   "latitude": -33.51299,
+   "longitude": 18.47542
+  },
+  {
+   "name": "Mandalay",
+   "latitude": -34.01486,
+   "longitude": 18.62616
+  },
+  {
+   "name": "Mandela Park (Makaya)",
+   "latitude": -34.04865,
+   "longitude": 18.68355
+  },
+  {
+   "name": "Manenberg",
+   "latitude": -33.98972,
+   "longitude": 18.55444
+  },
+  {
+   "name": "Marconi Beam",
+   "latitude": -33.87231,
+   "longitude": 18.51567
+  },
+  {
+   "name": "Marina Da Gama",
+   "latitude": -34.09109,
+   "longitude": 18.47716
+  },
+  {
+   "name": "Masiphumelele",
+   "latitude": -34.12937,
+   "longitude": 18.37579
+  },
+  {
+   "name": "Matroosfontein",
+   "latitude": -33.94056,
+   "longitude": 18.57778
+  },
+  {
+   "name": "Meadowridge",
+   "latitude": -34.03333,
+   "longitude": 18.45139
+  },
+  {
+   "name": "Melkbosstrand",
+   "latitude": -33.72222,
+   "longitude": 18.44583
+  },
+  {
+   "name": "Metro",
+   "latitude": -33.89569,
+   "longitude": 18.48218
+  },
+  {
+   "name": "Metro Industrial Township",
+   "latitude": -33.89741,
+   "longitude": 18.48135
+  },
+  {
+   "name": "Mfuleni",
+   "latitude": -33.99228,
+   "longitude": 18.67699
+  },
+  {
+   "name": "Mikro Park",
+   "latitude": -33.93333,
+   "longitude": 18.7
+  },
+  {
+   "name": "Milnerton",
+   "latitude": -33.87944,
+   "longitude": 18.49639
+  },
+  {
+   "name": "Milnerton Ridge",
+   "latitude": -33.85305,
+   "longitude": 18.50899
+  },
+  {
+   "name": "Misty Cliffs",
+   "latitude": -34.1844,
+   "longitude": 18.36282
+  },
+  {
+   "name": "Mitchells Plain",
+   "latitude": -34.05056,
+   "longitude": 18.61806
+  },
+  {
+   "name": "Montague",
+   "latitude": -33.88774,
+   "longitude": 18.54229
+  },
+  {
+   "name": "Montague Gardens",
+   "latitude": -33.85975,
+   "longitude": 18.52292
+  },
+  {
+   "name": "Montclair",
+   "latitude": -34.02072,
+   "longitude": 18.62601
+  },
+  {
+   "name": "Monte Vista",
+   "latitude": -33.87972,
+   "longitude": 18.555
+  },
+  {
+   "name": "Montevideo",
+   "latitude": -33.96551,
+   "longitude": 18.57497
+  },
+  {
+   "name": "Monwabisi",
+   "latitude": -34.06799,
+   "longitude": 18.70805
+  },
+  {
+   "name": "Morgenster",
+   "latitude": -33.86917,
+   "longitude": 18.6925
+  },
+  {
+   "name": "Morgenster Hoogte",
+   "latitude": -33.86399,
+   "longitude": 18.69432
+  },
+  {
+   "name": "Mouille Point",
+   "latitude": -33.90002,
+   "longitude": 18.40388
+  },
+  {
+   "name": "Mount Rhodes",
+   "latitude": -34.01917,
+   "longitude": 18.34944
+  },
+  {
+   "name": "Mountview",
+   "latitude": -33.98575,
+   "longitude": 18.52552
+  },
+  {
+   "name": "Mowbray",
+   "latitude": -33.94833,
+   "longitude": 18.47417
+  },
+  {
+   "name": "Muizenberg",
+   "latitude": -34.10278,
+   "longitude": 18.46528
+  },
+  {
+   "name": "Mxolisi Phetani (Site C)",
+   "latitude": -34.01157,
+   "longitude": 18.64577
+  },
+  {
+   "name": "N1 City",
+   "latitude": -33.89221,
+   "longitude": 18.55993
+  },
+  {
+   "name": "Ndabeni",
+   "latitude": -33.92849,
+   "longitude": 18.49162
+  },
+  {
+   "name": "New Crossroads",
+   "latitude": -33.99556,
+   "longitude": 18.58222
+  },
+  {
+   "name": "New Woodlands",
+   "latitude": -34.02313,
+   "longitude": 18.60083
+  },
+  {
+   "name": "Newfields",
+   "latitude": -33.98517,
+   "longitude": 18.53324
+  },
+  {
+   "name": "Newlands",
+   "latitude": -33.97428,
+   "longitude": 18.4573
+  },
+  {
+   "name": "Nomzamo",
+   "latitude": -34.11492,
+   "longitude": 18.86113
+  },
+  {
+   "name": "Nonqubela (Site B)",
+   "latitude": -34.02305,
+   "longitude": 18.66632
+  },
+  {
+   "name": "Nooitgedacht",
+   "latitude": -33.95417,
+   "longitude": 18.57944
+  },
+  {
+   "name": "Noordhaven",
+   "latitude": -34.09986,
+   "longitude": 18.38694
+  },
+  {
+   "name": "Noordhoek",
+   "latitude": -34.09952,
+   "longitude": 18.3786
+  },
+  {
+   "name": "Northgate",
+   "latitude": -33.88508,
+   "longitude": 18.5788
+  },
+  {
+   "name": "Northpine",
+   "latitude": -33.86944,
+   "longitude": 18.71472
+  },
+  {
+   "name": "Norwood",
+   "latitude": -33.92583,
+   "longitude": 18.57806
+  },
+  {
+   "name": "Nuwedorp",
+   "latitude": -34.06333,
+   "longitude": 18.88806
+  },
+  {
+   "name": "Nyanga",
+   "latitude": -33.98694,
+   "longitude": 18.58472
+  },
+  {
+   "name": "Oakdale",
+   "latitude": -33.89139,
+   "longitude": 18.63639
+  },
+  {
+   "name": "Oakglen",
+   "latitude": -33.88587,
+   "longitude": 18.66768
+  },
+  {
+   "name": "Observatory",
+   "latitude": -33.93694,
+   "longitude": 18.46833
+  },
+  {
+   "name": "Ocean View",
+   "latitude": -34.14588,
+   "longitude": 18.35299
+  },
+  {
+   "name": "Oosterzee",
+   "latitude": -33.89626,
+   "longitude": 18.60618
+  },
+  {
+   "name": "Oranjezicht",
+   "latitude": -33.94389,
+   "longitude": 18.415
+  },
+  {
+   "name": "Ottery",
+   "latitude": -34.01315,
+   "longitude": 18.50915
+  },
+  {
+   "name": "Oude Westhof",
+   "latitude": -33.85601,
+   "longitude": 18.59909
+  },
+  {
+   "name": "Paarden Eiland",
+   "latitude": -33.91405,
+   "longitude": 18.47119
+  },
+  {
+   "name": "Paardevlei",
+   "latitude": -34.09131,
+   "longitude": 18.81496
+  },
+  {
+   "name": "Palm Park",
+   "latitude": -33.99528,
+   "longitude": 18.72
+  },
+  {
+   "name": "Panorama",
+   "latitude": -33.88278,
+   "longitude": 18.57028
+  },
+  {
+   "name": "Parelvallei",
+   "latitude": -34.06944,
+   "longitude": 18.85194
+  },
+  {
+   "name": "Parklands",
+   "latitude": -33.81278,
+   "longitude": 18.49969
+  },
+  {
+   "name": "Parkwood",
+   "latitude": -34.03333,
+   "longitude": 18.49556
+  },
+  {
+   "name": "Parow",
+   "latitude": -33.9025,
+   "longitude": 18.58694
+  },
+  {
+   "name": "Parow East",
+   "latitude": -33.90547,
+   "longitude": 18.6009
+  },
+  {
+   "name": "Parow North",
+   "latitude": -33.89039,
+   "longitude": 18.58592
+  },
+  {
+   "name": "Parow Valley",
+   "latitude": -33.91343,
+   "longitude": 18.59282
+  },
+  {
+   "name": "Parow-Oos",
+   "latitude": -33.89694,
+   "longitude": 18.59833
+  },
+  {
+   "name": "Parowvallei",
+   "latitude": -33.91222,
+   "longitude": 18.59278
+  },
+  {
+   "name": "Peerless Park",
+   "latitude": -33.84312,
+   "longitude": 18.7235
+  },
+  {
+   "name": "Pelican Heights",
+   "latitude": -34.08404,
+   "longitude": 18.54183
+  },
+  {
+   "name": "Pelican Park",
+   "latitude": -34.06203,
+   "longitude": 18.52812
+  },
+  {
+   "name": "Pelikan Park",
+   "latitude": -34.06687,
+   "longitude": 18.53239
+  },
+  {
+   "name": "Pella",
+   "latitude": -33.53951,
+   "longitude": 18.52151
+  },
+  {
+   "name": "Penhill",
+   "latitude": -33.99278,
+   "longitude": 18.73361
+  },
+  {
+   "name": "Penlyn Estate",
+   "latitude": -33.98392,
+   "longitude": 18.52209
+  },
+  {
+   "name": "Philadelphia",
+   "latitude": -33.66663,
+   "longitude": 18.58099
+  },
+  {
+   "name": "Philippi",
+   "latitude": -34.00531,
+   "longitude": 18.57038
+  },
+  {
+   "name": "Philippi - Farmland",
+   "latitude": -34.02831,
+   "longitude": 18.55142
+  },
+  {
+   "name": "Phoenix",
+   "latitude": -33.8748,
+   "longitude": 18.50634
+  },
+  {
+   "name": "Pinati",
+   "latitude": -33.99199,
+   "longitude": 18.51795
+  },
+  {
+   "name": "Pine Haven",
+   "latitude": -34.18251,
+   "longitude": 18.41498
+  },
+  {
+   "name": "Pinehurst",
+   "latitude": -33.83041,
+   "longitude": 18.68597
+  },
+  {
+   "name": "Pinelands",
+   "latitude": -33.93167,
+   "longitude": 18.51278
+  },
+  {
+   "name": "Plattekloof",
+   "latitude": -33.8775,
+   "longitude": 18.58556
+  },
+  {
+   "name": "Plattekloof Glen",
+   "latitude": -33.88434,
+   "longitude": 18.56046
+  },
+  {
+   "name": "Plumstead",
+   "latitude": -34.02,
+   "longitude": 18.47722
+  },
+  {
+   "name": "Portland",
+   "latitude": -34.05033,
+   "longitude": 18.61303
+  },
+  {
+   "name": "Primrose Park",
+   "latitude": -33.98194,
+   "longitude": 18.54889
+  },
+  {
+   "name": "Protea Park",
+   "latitude": -33.57417,
+   "longitude": 18.49471
+  },
+  {
+   "name": "Protea Vallei",
+   "latitude": -33.86556,
+   "longitude": 18.61661
+  },
+  {
+   "name": "Proteaville",
+   "latitude": -33.81975,
+   "longitude": 18.65641
+  },
+  {
+   "name": "Puntsville",
+   "latitude": -34.04139,
+   "longitude": 18.47
+  },
+  {
+   "name": "Racing Park",
+   "latitude": -33.81415,
+   "longitude": 18.53549
+  },
+  {
+   "name": "Ravensmead",
+   "latitude": -33.92111,
+   "longitude": 18.60639
+  },
+  {
+   "name": "Redhill Informal Settlement",
+   "latitude": -34.20101,
+   "longitude": 18.40865
+  },
+  {
+   "name": "Retreat",
+   "latitude": -34.05417,
+   "longitude": 18.47639
+  },
+  {
+   "name": "Richmond",
+   "latitude": -33.90625,
+   "longitude": 18.57373
+  },
+  {
+   "name": "Richmond Estate",
+   "latitude": -33.90207,
+   "longitude": 18.56649
+  },
+  {
+   "name": "Richwood",
+   "latitude": -33.83306,
+   "longitude": 18.54361
+  },
+  {
+   "name": "Ridgeworth",
+   "latitude": -33.87389,
+   "longitude": 18.64472
+  },
+  {
+   "name": "Risiview",
+   "latitude": -34.13133,
+   "longitude": 18.40844
+  },
+  {
+   "name": "Riverside",
+   "latitude": -33.79688,
+   "longitude": 18.53012
+  },
+  {
+   "name": "Robinvale",
+   "latitude": -33.565,
+   "longitude": 18.5061
+  },
+  {
+   "name": "Rocklands",
+   "latitude": -34.064,
+   "longitude": 18.609
+  },
+  {
+   "name": "Rome Glen",
+   "latitude": -34.08972,
+   "longitude": 18.8675
+  },
+  {
+   "name": "Rondebosch",
+   "latitude": -33.96806,
+   "longitude": 18.48778
+  },
+  {
+   "name": "Rondebosch East",
+   "latitude": -33.97917,
+   "longitude": 18.49833
+  },
+  {
+   "name": "Rondebosch Village",
+   "latitude": -33.95199,
+   "longitude": 18.48743
+  },
+  {
+   "name": "Rontree",
+   "latitude": -33.96611,
+   "longitude": 18.38056
+  },
+  {
+   "name": "Roosendal",
+   "latitude": -33.95972,
+   "longitude": 18.65139
+  },
+  {
+   "name": "Rosebank",
+   "latitude": -33.95194,
+   "longitude": 18.47389
+  },
+  {
+   "name": "Royal Ascot",
+   "latitude": -33.86212,
+   "longitude": 18.50595
+  },
+  {
+   "name": "Rugby",
+   "latitude": -33.89761,
+   "longitude": 18.48778
+  },
+  {
+   "name": "Rustdal",
+   "latitude": -33.95806,
+   "longitude": 18.70333
+  },
+  {
+   "name": "Rusthof",
+   "latitude": -34.13128,
+   "longitude": 18.84764
+  },
+  {
+   "name": "Ruyterwacht",
+   "latitude": -33.91962,
+   "longitude": 18.55707
+  },
+  {
+   "name": "Rylands",
+   "latitude": -33.97366,
+   "longitude": 18.52733
+  },
+  {
+   "name": "Rylands Estate",
+   "latitude": -33.97083,
+   "longitude": 18.52944
+  },
+  {
+   "name": "Sabata Dalindyebo Square (Green Point)",
+   "latitude": -34.03063,
+   "longitude": 18.67785
+  },
+  {
+   "name": "Salt River",
+   "latitude": -33.9317,
+   "longitude": 18.46101
+  },
+  {
+   "name": "San Michele",
+   "latitude": -34.10512,
+   "longitude": 18.39398
+  },
+  {
+   "name": "Sanddrift",
+   "latitude": -33.88292,
+   "longitude": 18.50966
+  },
+  {
+   "name": "Sandvlei",
+   "latitude": -34.05889,
+   "longitude": 18.73306
+  },
+  {
+   "name": "Sarepta",
+   "latitude": -33.93278,
+   "longitude": 18.66667
+  },
+  {
+   "name": "Saxonsea",
+   "latitude": -33.55041,
+   "longitude": 18.49477
+  },
+  {
+   "name": "Scarborough",
+   "latitude": -34.1982,
+   "longitude": 18.3776
+  },
+  {
+   "name": "Schoongezicht",
+   "latitude": -33.81694,
+   "longitude": 18.6475
+  },
+  {
+   "name": "Scott Estate",
+   "latitude": -34.03818,
+   "longitude": 18.36555
+  },
+  {
+   "name": "Scottsdene",
+   "latitude": -33.86278,
+   "longitude": 18.725
+  },
+  {
+   "name": "Scottsville",
+   "latitude": -33.85556,
+   "longitude": 18.70556
+  },
+  {
+   "name": "Sea Point",
+   "latitude": -33.91722,
+   "longitude": 18.39222
+  },
+  {
+   "name": "Seaforth",
+   "latitude": -34.19667,
+   "longitude": 18.45
+  },
+  {
+   "name": "Seawinds",
+   "latitude": -34.07781,
+   "longitude": 18.48792
+  },
+  {
+   "name": "Selborne",
+   "latitude": -33.8814,
+   "longitude": 18.62044
+  },
+  {
+   "name": "Sherwood",
+   "latitude": -33.55472,
+   "longitude": 18.49556
+  },
+  {
+   "name": "Shirley Park",
+   "latitude": -33.90556,
+   "longitude": 18.66333
+  },
+  {
+   "name": "Sillery",
+   "latitude": -34.02778,
+   "longitude": 18.43889
+  },
+  {
+   "name": "Silverglade",
+   "latitude": -34.12745,
+   "longitude": 18.41345
+  },
+  {
+   "name": "Silverhurst",
+   "latitude": -34.01787,
+   "longitude": 18.43313
+  },
+  {
+   "name": "Silvermist Estate",
+   "latitude": -34.01309,
+   "longitude": 18.40203
+  },
+  {
+   "name": "Silveroaks",
+   "latitude": -33.93694,
+   "longitude": 18.69056
+  },
+  {
+   "name": "Silversands",
+   "latitude": -33.97972,
+   "longitude": 18.67806
+  },
+  {
+   "name": "Silvertown",
+   "latitude": -33.96306,
+   "longitude": 18.52944
+  },
+  {
+   "name": "Silvertown - Khayelitsha",
+   "latitude": -34.04096,
+   "longitude": 18.68484
+  },
+  {
+   "name": "Simon's Town",
+   "latitude": -34.19318,
+   "longitude": 18.43327
+  },
+  {
+   "name": "Sir Lowry's Pass",
+   "latitude": -34.11768,
+   "longitude": 18.9103
+  },
+  {
+   "name": "Soet Water",
+   "latitude": -34.15972,
+   "longitude": 18.33056
+  },
+  {
+   "name": "Somerset Country Estate",
+   "latitude": -34.10288,
+   "longitude": 18.86189
+  },
+  {
+   "name": "Somerset West",
+   "latitude": -34.08222,
+   "longitude": 18.84893
+  },
+  {
+   "name": "Soneike",
+   "latitude": -33.91639,
+   "longitude": 18.68111
+  },
+  {
+   "name": "Sonnendal",
+   "latitude": -33.8819,
+   "longitude": 18.58109
+  },
+  {
+   "name": "Sonstraal Heights",
+   "latitude": -33.84294,
+   "longitude": 18.67844
+  },
+  {
+   "name": "Southfield",
+   "latitude": -34.03472,
+   "longitude": 18.48333
+  },
+  {
+   "name": "Southfork",
+   "latitude": -34.13861,
+   "longitude": 18.85222
+  },
+  {
+   "name": "Spanish Farm",
+   "latitude": -34.05444,
+   "longitude": 18.85083
+  },
+  {
+   "name": "Square Hill",
+   "latitude": -34.06639,
+   "longitude": 18.46861
+  },
+  {
+   "name": "St. James",
+   "latitude": -34.11907,
+   "longitude": 18.45714
+  },
+  {
+   "name": "Steenberg",
+   "latitude": -34.07472,
+   "longitude": 18.47083
+  },
+  {
+   "name": "Stellenberg",
+   "latitude": -33.86778,
+   "longitude": 18.66
+  },
+  {
+   "name": "Stellenridge",
+   "latitude": -33.875,
+   "longitude": 18.65833
+  },
+  {
+   "name": "Stikland",
+   "latitude": -33.89222,
+   "longitude": 18.66917
+  },
+  {
+   "name": "Stonehaven Estate",
+   "latitude": -34.1324,
+   "longitude": 18.3987
+  },
+  {
+   "name": "Strand",
+   "latitude": -34.10556,
+   "longitude": 18.83056
+  },
+  {
+   "name": "Strand Halt",
+   "latitude": -34.09858,
+   "longitude": 18.8387
+  },
+  {
+   "name": "Summer Greens",
+   "latitude": -33.87861,
+   "longitude": 18.52778
+  },
+  {
+   "name": "Sun Valley",
+   "latitude": -34.12401,
+   "longitude": 18.39627
+  },
+  {
+   "name": "Sunbird Park",
+   "latitude": -33.96667,
+   "longitude": 18.68333
+  },
+  {
+   "name": "Sunningdale",
+   "latitude": -33.80951,
+   "longitude": 18.48875
+  },
+  {
+   "name": "Sunnydale",
+   "latitude": -34.12575,
+   "longitude": 18.39029
+  },
+  {
+   "name": "Sunnyside",
+   "latitude": -33.96917,
+   "longitude": 18.51611
+  },
+  {
+   "name": "Sunridge",
+   "latitude": -33.82583,
+   "longitude": 18.51167
+  },
+  {
+   "name": "Sunset Beach",
+   "latitude": -33.85375,
+   "longitude": 18.49148
+  },
+  {
+   "name": "Sunset Links",
+   "latitude": -33.86484,
+   "longitude": 18.49127
+  },
+  {
+   "name": "Surrey",
+   "latitude": -33.97516,
+   "longitude": 18.54447
+  },
+  {
+   "name": "Surrey Estate",
+   "latitude": -33.97639,
+   "longitude": 18.54583
+  },
+  {
+   "name": "Sweet Home",
+   "latitude": -34.00748,
+   "longitude": 18.5623
+  },
+  {
+   "name": "Sweet Valley",
+   "latitude": -34.05028,
+   "longitude": 18.43861
+  },
+  {
+   "name": "Sybrand Park",
+   "latitude": -33.95607,
+   "longitude": 18.4986
+  },
+  {
+   "name": "Sybrandpark",
+   "latitude": -33.95694,
+   "longitude": 18.49944
+  },
+  {
+   "name": "Table View",
+   "latitude": -33.82361,
+   "longitude": 18.49028
+  },
+  {
+   "name": "Tafelsig",
+   "latitude": -34.06159,
+   "longitude": 18.63802
+  },
+  {
+   "name": "Tamboerskloof",
+   "latitude": -33.92833,
+   "longitude": 18.40639
+  },
+  {
+   "name": "Tara",
+   "latitude": -33.83667,
+   "longitude": 18.66944
+  },
+  {
+   "name": "Temperance Town",
+   "latitude": -34.15305,
+   "longitude": 18.88305
+  },
+  {
+   "name": "The Boulders",
+   "latitude": -34.19739,
+   "longitude": 18.45118
+  },
+  {
+   "name": "The Conifers",
+   "latitude": -33.98769,
+   "longitude": 18.69688
+  },
+  {
+   "name": "The Crest",
+   "latitude": -33.81743,
+   "longitude": 18.67294
+  },
+  {
+   "name": "The Glen",
+   "latitude": -33.94778,
+   "longitude": 18.38472
+  },
+  {
+   "name": "The Hague",
+   "latitude": -33.95833,
+   "longitude": 18.64167
+  },
+  {
+   "name": "The Links",
+   "latitude": -34.07128,
+   "longitude": 18.835
+  },
+  {
+   "name": "The Vines",
+   "latitude": -34.09551,
+   "longitude": 18.85936
+  },
+  {
+   "name": "Thornton",
+   "latitude": -33.92361,
+   "longitude": 18.53528
+  },
+  {
+   "name": "Three Anchor Bay",
+   "latitude": -33.90917,
+   "longitude": 18.39556
+  },
+  {
+   "name": "Tijgerhof",
+   "latitude": -33.8875,
+   "longitude": 18.49833
+  },
+  {
+   "name": "Tokai",
+   "latitude": -34.06083,
+   "longitude": 18.44167
+  },
+  {
+   "name": "Townsend Estate",
+   "latitude": -33.90709,
+   "longitude": 18.54125
+  },
+  {
+   "name": "Tuscana Close",
+   "latitude": -34.09849,
+   "longitude": 18.85984
+  },
+  {
+   "name": "Tuscany Glen",
+   "latitude": -33.99972,
+   "longitude": 18.7
+  },
+  {
+   "name": "Tyger Valley",
+   "latitude": -33.87729,
+   "longitude": 18.63271
+  },
+  {
+   "name": "Tygerdal",
+   "latitude": -33.89449,
+   "longitude": 18.54602
+  },
+  {
+   "name": "Uitsig",
+   "latitude": -33.93806,
+   "longitude": 18.59972
+  },
+  {
+   "name": "Umrhabulo Triangle (Makhaza)",
+   "latitude": -34.04679,
+   "longitude": 18.70377
+  },
+  {
+   "name": "V&A Waterfront",
+   "latitude": -33.90602,
+   "longitude": 18.42392
+  },
+  {
+   "name": "Valmary Park",
+   "latitude": -33.84583,
+   "longitude": 18.65093
+  },
+  {
+   "name": "Van Riebeeckshof",
+   "latitude": -33.85519,
+   "longitude": 18.60948
+  },
+  {
+   "name": "Van Riebeeckstrand",
+   "latitude": -33.69417,
+   "longitude": 18.44583
+  },
+  {
+   "name": "Vanguard",
+   "latitude": -33.96485,
+   "longitude": 18.54282
+  },
+  {
+   "name": "Vasco",
+   "latitude": -33.90472,
+   "longitude": 18.56139
+  },
+  {
+   "name": "Vasco Estate",
+   "latitude": -33.9031,
+   "longitude": 18.559
+  },
+  {
+   "name": "Vergesig",
+   "latitude": -33.83947,
+   "longitude": 18.63109
+  },
+  {
+   "name": "Victoria Mxenge (Site B)",
+   "latitude": -34.02437,
+   "longitude": 18.65699
+  },
+  {
+   "name": "Vierlanden",
+   "latitude": -33.81346,
+   "longitude": 18.65765
+  },
+  {
+   "name": "Vierlanden Kleinhoewes",
+   "latitude": -33.80537,
+   "longitude": 18.66015
+  },
+  {
+   "name": "Viking Village",
+   "latitude": -33.83049,
+   "longitude": 18.71889
+  },
+  {
+   "name": "Voëlvlei",
+   "latitude": -33.92306,
+   "longitude": 18.66722
+  },
+  {
+   "name": "Voorbrug",
+   "latitude": -33.97306,
+   "longitude": 18.64861
+  },
+  {
+   "name": "Vredehoek",
+   "latitude": -33.94056,
+   "longitude": 18.42306
+  },
+  {
+   "name": "Vredekloof",
+   "latitude": -33.86194,
+   "longitude": 18.67833
+  },
+  {
+   "name": "Vredekloof East",
+   "latitude": -33.86076,
+   "longitude": 18.6872
+  },
+  {
+   "name": "Vredelust",
+   "latitude": -33.89561,
+   "longitude": 18.6124
+  },
+  {
+   "name": "Vredenberg",
+   "latitude": -33.87694,
+   "longitude": 18.66694
+  },
+  {
+   "name": "Vrijzee",
+   "latitude": -33.9075,
+   "longitude": 18.56972
+  },
+  {
+   "name": "Vrygrond",
+   "latitude": -34.08358,
+   "longitude": 18.48755
+  },
+  {
+   "name": "Vyeboom",
+   "latitude": -34.05639,
+   "longitude": 18.89306
+  },
+  {
+   "name": "Wallacedene",
+   "latitude": -33.85,
+   "longitude": 18.73333
+  },
+  {
+   "name": "Waterfront",
+   "latitude": -33.90306,
+   "longitude": 18.42167
+  },
+  {
+   "name": "Welcome",
+   "latitude": -33.96064,
+   "longitude": 18.54415
+  },
+  {
+   "name": "Welcome Estate",
+   "latitude": -33.95917,
+   "longitude": 18.54667
+  },
+  {
+   "name": "Welgelegen",
+   "latitude": -33.87083,
+   "longitude": 18.56861
+  },
+  {
+   "name": "Welgemoed",
+   "latitude": -33.87472,
+   "longitude": 18.61639
+  },
+  {
+   "name": "Weltevreden",
+   "latitude": -34.12389,
+   "longitude": 18.84278
+  },
+  {
+   "name": "Wesbank",
+   "latitude": -33.96909,
+   "longitude": 18.65751
+  },
+  {
+   "name": "Wesfleur",
+   "latitude": -33.56388,
+   "longitude": 18.48833
+  },
+  {
+   "name": "Westerdale",
+   "latitude": -33.81068,
+   "longitude": 18.61899
+  },
+  {
+   "name": "Westgate",
+   "latitude": -34.04514,
+   "longitude": 18.58791
+  },
+  {
+   "name": "Westlake",
+   "latitude": -34.07849,
+   "longitude": 18.44101
+  },
+  {
+   "name": "Westridge",
+   "latitude": -34.07481,
+   "longitude": 18.83299
+  },
+  {
+   "name": "Wetton",
+   "latitude": -34.00472,
+   "longitude": 18.51861
+  },
+  {
+   "name": "Windermere",
+   "latitude": -33.90639,
+   "longitude": 18.51861
+  },
+  {
+   "name": "Windsor Estate",
+   "latitude": -33.83806,
+   "longitude": 18.70611
+  },
+  {
+   "name": "Windsor Park",
+   "latitude": -33.84806,
+   "longitude": 18.70444
+  },
+  {
+   "name": "Wingfield",
+   "latitude": -33.9075,
+   "longitude": 18.52925
+  },
+  {
+   "name": "Witsand",
+   "latitude": -33.5861,
+   "longitude": 18.50523
+  },
+  {
+   "name": "Witteboomen",
+   "latitude": -34.01671,
+   "longitude": 18.41945
+  },
+  {
+   "name": "Wolwerivier",
+   "latitude": -33.73064,
+   "longitude": 18.5146
+  },
+  {
+   "name": "Woodbridge Island",
+   "latitude": -33.88427,
+   "longitude": 18.48722
+  },
+  {
+   "name": "Woodlands",
+   "latitude": -34.03972,
+   "longitude": 18.59944
+  },
+  {
+   "name": "Woodstock",
+   "latitude": -33.93056,
+   "longitude": 18.44722
+  },
+  {
+   "name": "WP Park",
+   "latitude": -33.92473,
+   "longitude": 18.54705
+  },
+  {
+   "name": "Wynberg",
+   "latitude": -34.00362,
+   "longitude": 18.46725
+  },
+  {
+   "name": "Wyndover",
+   "latitude": -33.97917,
+   "longitude": 18.48806
+  },
+  {
+   "name": "Zeekoevlei",
+   "latitude": -34.05604,
+   "longitude": 18.50448
+  }
+ ]
+}

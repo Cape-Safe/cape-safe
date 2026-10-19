@@ -1,4 +1,5 @@
 import crimeStats from "./data/capeTownCrimeStats.json";
+import suburbs from "./data/capeTownSuburbs.json";
 import type { WeightedLatLng } from "./Heatmap";
 
 // Weights follow SAPS's own crime categories, as documented in the dataset's
@@ -54,6 +55,18 @@ const CRIME_WEIGHTS: Record<string, number> = {
   // (policing-intensity indicators, not community risk)
 };
 
+// Crimes that target tourists, ranked separately so theft hotspots like Sea
+// Point register. Shoplifting/commercial crime excluded (victim is a business).
+const TOURIST_THEFT_WEIGHTS: Record<string, number> = {
+  theft_from_vehicle: 3, // car break-ins
+  common_robbery: 3, // muggings, bag/phone snatching with force
+  other_theft: 2, // pickpocketing, theft of belongings
+  vehicle_theft: 1,
+};
+
+// Violent crime counts double in the final blend.
+const VIOLENT_SHARE = 2 / 3;
+
 // Human-readable labels, taken from each variable's `labl` field in the SAPS
 // codebook (docs/zar-saps-sapsacr-2005-2025-v1.4 2.json → variables[]).
 const CRIME_LABELS: Record<string, string> = {
@@ -100,7 +113,9 @@ export type StationRisk = {
   latitude: number;
   longitude: number;
   weightedScore: number;
-  risk: number; // 0-1, min-max normalized across the current station set
+  violentRisk: number; // 0-1, percentile rank of the CRIME_WEIGHTS score
+  theftRisk: number; // 0-1, percentile rank of the TOURIST_THEFT_WEIGHTS score
+  risk: number; // 0-1, percentile rank of the violent/theft blend (1 = worst)
 };
 
 function rawValue(stats: StationStats, field: string): number {
@@ -128,9 +143,10 @@ function buildFieldRanges(stations: StationStats[]): Record<string, [number, num
 function weightedScore(
   stats: StationStats,
   ranges: Record<string, [number, number]>,
+  weights: Record<string, number> = CRIME_WEIGHTS,
 ): number {
   let score = 0;
-  for (const [field, weight] of Object.entries(CRIME_WEIGHTS)) {
+  for (const [field, weight] of Object.entries(weights)) {
     const [lo, hi] = ranges[field];
     const normalized = hi > lo ? (rawValue(stats, field) - lo) / (hi - lo) : 0;
     score += normalized * weight;
@@ -138,33 +154,94 @@ function weightedScore(
   return score;
 }
 
+// Percentile rank rather than min-max: a few extreme hotspots would otherwise
+// push most precincts near 0.
+function percentileRanks(values: number[]): number[] {
+  const order = values.map((_, i) => i).sort((a, b) => values[a] - values[b]);
+  const last = values.length - 1;
+  const ranks = new Array<number>(values.length);
+  order.forEach((valueIndex, position) => {
+    ranks[valueIndex] = last > 0 ? position / last : 0;
+  });
+  return ranks;
+}
+
 export function scoreStationRisk(): StationRisk[] {
   const stations = crimeStats.stations as StationStats[];
   const ranges = buildFieldRanges(stations);
-  const scored = stations.map((s) => ({
-    station: s.station,
-    locality: s.locality,
-    latitude: s.latitude,
-    longitude: s.longitude,
-    weightedScore: weightedScore(s, ranges),
-  }));
+  const violentScores = stations.map((s) => weightedScore(s, ranges));
+  const theftScores = stations.map((s) =>
+    weightedScore(s, ranges, TOURIST_THEFT_WEIGHTS),
+  );
+  const violentRanks = percentileRanks(violentScores);
+  const theftRanks = percentileRanks(theftScores);
+  const blendRanks = percentileRanks(
+    stations.map(
+      (_, i) => VIOLENT_SHARE * violentRanks[i] + (1 - VIOLENT_SHARE) * theftRanks[i],
+    ),
+  );
 
-  const scores = scored.map((s) => s.weightedScore);
-  const lo = Math.min(...scores);
-  const hi = Math.max(...scores);
-
-  return scored
-    .map((s) => ({
-      ...s,
-      risk: hi > lo ? (s.weightedScore - lo) / (hi - lo) : 0,
+  return stations
+    .map((s, i) => ({
+      station: s.station,
+      locality: s.locality,
+      latitude: s.latitude,
+      longitude: s.longitude,
+      weightedScore: violentScores[i],
+      violentRisk: violentRanks[i],
+      theftRisk: theftRanks[i],
+      risk: blendRanks[i],
     }))
     .sort((a, b) => b.risk - a.risk);
+}
+
+export type SuburbRisk = {
+  suburb: string;
+  latitude: number;
+  longitude: number;
+  station: string; // police precinct the suburb's score comes from
+  risk: number; // 0-1, the precinct's risk
+};
+
+function distanceKm(
+  a: { latitude: number; longitude: number },
+  b: { latitude: number; longitude: number },
+): number {
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const x =
+    toRad(b.longitude - a.longitude) *
+    Math.cos(toRad((a.latitude + b.latitude) / 2));
+  const y = toRad(b.latitude - a.latitude);
+  return 6371 * Math.hypot(x, y);
+}
+
+// SAPS data is per precinct, so each suburb takes its nearest station's risk.
+export function scoreSuburbRisk(): SuburbRisk[] {
+  const stations = scoreStationRisk();
+  return suburbs.places.map((place) => {
+    let nearest = stations[0];
+    let nearestKm = Infinity;
+    for (const station of stations) {
+      const km = distanceKm(place, station);
+      if (km < nearestKm) {
+        nearest = station;
+        nearestKm = km;
+      }
+    }
+    return {
+      suburb: place.name,
+      latitude: place.latitude,
+      longitude: place.longitude,
+      station: nearest.station,
+      risk: nearest.risk,
+    };
+  });
 }
 
 // Ready to feed into buildHeatmapCircles() from ./Heatmap — risk becomes the
 // heatmap intensity, so red = high risk / unsafe, green = low risk / safer.
 export function getCapeTownCrimeHeatmapPoints(): WeightedLatLng[] {
-  return scoreStationRisk().map((s) => ({
+  return scoreSuburbRisk().map((s) => ({
     latitude: s.latitude,
     longitude: s.longitude,
     intensity: s.risk,
