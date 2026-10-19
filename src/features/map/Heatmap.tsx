@@ -24,7 +24,7 @@ export type HeatmapCircle = {
   lineWidth: number;
 };
 
-const DEFAULT_GRADIENT: HeatmapGradientStop[] = [
+export const DEFAULT_GRADIENT: HeatmapGradientStop[] = [
   { color: { r: 34, g: 197, b: 94 }, start: 0.2 }, // green
   { color: { r: 234, g: 179, b: 8 }, start: 0.6 }, // yellow
   { color: { r: 239, g: 68, b: 68 }, start: 1.0 }, // red
@@ -34,7 +34,7 @@ function lerp(a: number, b: number, t: number) {
   return Math.round(a + (b - a) * t);
 }
 
-function sampleGradient(gradient: HeatmapGradientStop[], t: number) {
+export function sampleGradient(gradient: HeatmapGradientStop[], t: number) {
   const sorted = [...gradient].sort((a, b) => a.start - b.start);
   if (t <= sorted[0].start) return sorted[0].color;
   const last = sorted[sorted.length - 1];
