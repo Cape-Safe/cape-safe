@@ -107,8 +107,13 @@ export function subscribeToGroup(
   code: string,
   onChange: (group: Group | null) => void,
 ) {
-  return onSnapshot(groupRef(code), (snap) =>
-    onChange(snap.exists() ? ({ id: snap.id, ...snap.data() } as Group) : null),
+  return onSnapshot(
+    groupRef(code),
+    (snap) =>
+      onChange(
+        snap.exists() ? ({ id: snap.id, ...snap.data() } as Group) : null,
+      ),
+    () => onChange(null),
   );
 }
 
@@ -117,16 +122,19 @@ export function subscribeToGroupLocations(
   code: string,
   onChange: (locations: MemberLocation[]) => void,
 ) {
-  return onSnapshot(collection(db, "groups", code, "locations"), (snap) =>
-    onChange(
-      snap.docs.map(
-        (d) =>
-          // "estimate" fills in updatedAt locally before the server confirms it
-          ({
-            uid: d.id,
-            ...d.data({ serverTimestamps: "estimate" }),
-          }) as MemberLocation,
+  return onSnapshot(
+    collection(db, "groups", code, "locations"),
+    (snap) =>
+      onChange(
+        snap.docs.map(
+          (d) =>
+            // "estimate" fills in updatedAt locally before the server confirms it
+            ({
+              uid: d.id,
+              ...d.data({ serverTimestamps: "estimate" }),
+            }) as MemberLocation,
+        ),
       ),
-    ),
+    () => onChange([]),
   );
 }

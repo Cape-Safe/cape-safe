@@ -23,6 +23,11 @@ export default function AppTabs() {
         <NativeTabs.Trigger.Icon sf="sos" md="sos" />
       </NativeTabs.Trigger>
 
+      <NativeTabs.Trigger name="group">
+        <NativeTabs.Trigger.Label>Group</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="person.3" md="group" />
+      </NativeTabs.Trigger>
+
       <NativeTabs.Trigger name="login">
         <NativeTabs.Trigger.Label>Login</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="person.crop.circle" md="login" />

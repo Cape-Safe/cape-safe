@@ -2,6 +2,12 @@ import * as Location from "expo-location";
 import { AppleMaps, GoogleMaps, useLocationPermissions } from "expo-maps";
 import { useEffect, useMemo, useRef } from "react";
 import { Platform, StyleSheet, Text } from "react-native";
+
+import { isFresh, lastSeenLabel } from "@/features/groups/lastSeen";
+import { useGroup } from "@/hooks/use-group";
+import { useMyProfile } from "@/hooks/use-my-profile";
+import { useNow } from "@/hooks/use-now";
+
 import { buildHeatmapCircles } from "./Heatmap";
 import { getCapeTownCrimeHeatmapPoints } from "./crimeRiskScore";
 
@@ -17,6 +23,19 @@ export default function MapScreen() {
     () => buildHeatmapCircles(getCapeTownCrimeHeatmapPoints()),
     [],
   );
+
+  // Group members who are sharing (not you, not stale).
+  const { uid, groupCode } = useMyProfile();
+  const { locations } = useGroup(groupCode);
+  const now = useNow(30_000);
+  const memberMarkers = locations
+    .filter((l) => l.uid !== uid && isFresh(l, now))
+    .map((l) => ({
+      id: l.uid,
+      coordinates: l.coordinates,
+      title: l.displayName,
+      snippet: `Last seen ${lastSeenLabel(l, now)}`,
+    }));
 
   const googleMapRef = useRef<GoogleMaps.MapView>(null);
   const appleMapRef = useRef<AppleMaps.MapView>(null);
@@ -47,6 +66,7 @@ export default function MapScreen() {
         cameraPosition={cameraPosition}
         properties={{ isMyLocationEnabled: showUserLocation }}
         circles={crimeHeatmapCircles}
+        markers={memberMarkers}
       />
     );
   }
@@ -58,6 +78,7 @@ export default function MapScreen() {
         cameraPosition={cameraPosition}
         properties={{ isMyLocationEnabled: showUserLocation }}
         circles={crimeHeatmapCircles}
+        markers={memberMarkers}
       />
     );
   }

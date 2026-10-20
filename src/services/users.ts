@@ -16,3 +16,4 @@ export function subscribeToProfile(
 /** Creates or updates fields on the user's own profile. */
 export function updateProfile(uid: string, data: Partial<UserProfile>) {
   return setDoc(doc(db, "users", uid), data, { merge: true });
+}
