@@ -14,6 +14,7 @@ const BASE = {
   default: { fontSize: 16, lineHeight: 24, fontWeight: '500' },
   small: { fontSize: 14, lineHeight: 20, fontWeight: '500' },
   smallBold: { fontSize: 14, lineHeight: 20, fontWeight: '700' },
+  heading: { fontSize: 20, lineHeight: 26, fontWeight: '700' },
   subtitle: { fontSize: 32, lineHeight: 44, fontWeight: '600' },
 } as const;
 
