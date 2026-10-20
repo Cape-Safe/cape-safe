@@ -1,9 +1,8 @@
 // AreaSheet.tsx
 // Bottom card that opens when a police station marker is tapped. Shows the
-// area's risk level (never by colour alone), score, top crime factors, and
-// quick actions to call SAPS or get directions.
+// area's risk level (never by colour alone) and score, plus quick actions to
+// call SAPS or get directions. Raw crime counts are left out on purpose.
 
-import { useState } from "react";
 import { Linking, Platform, Pressable, StyleSheet, View } from "react-native";
 
 import { Spacing } from "@/constants/theme";
@@ -39,7 +38,6 @@ type Props = {
 
 export function AreaSheet({ station, onClose }: Props) {
   const theme = useTheme();
-  const [expanded, setExpanded] = useState(true);
   const level = riskLevel(station.risk);
   const colors = RISK_COLORS[level];
   const score = Math.round(station.risk * 100);
@@ -47,15 +45,6 @@ export function AreaSheet({ station, onClose }: Props) {
 
   return (
     <View style={[styles.sheet, { backgroundColor: theme.background }]}>
-      <Pressable
-        onPress={() => setExpanded((v) => !v)}
-        accessibilityRole="button"
-        accessibilityLabel={expanded ? "Hide details" : "Show details"}
-        style={styles.handleArea}
-      >
-        <View style={[styles.handle, { backgroundColor: theme.backgroundSelected }]} />
-      </Pressable>
-
       <View style={styles.headerRow}>
         <View style={styles.flex}>
           <ScaledText type="heading">{station.name}</ScaledText>
@@ -97,22 +86,6 @@ export function AreaSheet({ station, onClose }: Props) {
         </View>
       </View>
 
-      {expanded && station.topFactors.length > 0 && (
-        <View style={styles.factors}>
-          <ScaledText type="smallBold" themeColor="textSecondary">
-            Biggest factors (SAPS 2024/25)
-          </ScaledText>
-          {station.topFactors.map((factor) => (
-            <View key={factor.field} style={styles.factorRow}>
-              <ScaledText type="small" style={styles.flex}>
-                {factor.label}
-              </ScaledText>
-              <ScaledText type="smallBold">{factor.count}</ScaledText>
-            </View>
-          ))}
-        </View>
-      )}
-
       <View style={styles.actions}>
         <Pressable
           onPress={callPolice}
@@ -143,13 +116,11 @@ const styles = StyleSheet.create({
   sheet: {
     borderRadius: 20,
     paddingHorizontal: Spacing.three,
-    paddingBottom: Spacing.three,
+    paddingVertical: Spacing.three,
     gap: Spacing.two,
     boxShadow: CARD_SHADOW,
   },
   flex: { flex: 1 },
-  handleArea: { minHeight: 28, alignItems: "center", justifyContent: "center" },
-  handle: { width: 40, height: 4, borderRadius: 2 },
   headerRow: { flexDirection: "row", alignItems: "center", gap: Spacing.two },
   closeButton: {
     minHeight: 44,
@@ -163,8 +134,6 @@ const styles = StyleSheet.create({
   badge: { paddingHorizontal: Spacing.two, paddingVertical: Spacing.one, borderRadius: 12 },
   meter: { flexDirection: "row", gap: Spacing.one, flex: 1, minWidth: 80 },
   segment: { flex: 1, height: 8, borderRadius: 4 },
-  factors: { gap: Spacing.one },
-  factorRow: { flexDirection: "row", alignItems: "center", gap: Spacing.two },
   actions: { flexDirection: "row", gap: Spacing.two },
   action: {
     flex: 1,
