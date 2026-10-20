@@ -24,7 +24,11 @@ import { updateProfile } from "@/services/users";
 
 import { isFresh, lastSeenLabel } from "./lastSeen";
 
+// Group tab: sign-in prompt for guests, then either the create/join forms
+// or the current group's details.
+
 export default function GroupScreen() {
+  // Guests use the app anonymously; groups need a real account.
   const { isLoggedIn, loading: authLoading } = useAuth();
   const { uid, profile, groupCode, loading } = useMyProfile();
 
@@ -43,7 +47,7 @@ export default function GroupScreen() {
       </ThemedView>
     );
   }
-
+  // Wait for the profile so we know whether the user is already in a group.
   if (loading || !uid) {
     return (
       <ThemedView style={styles.centered}>
@@ -72,6 +76,7 @@ export default function GroupScreen() {
   );
 }
 
+// Shown when the user isn't in a group: set a display name, then create or join one.
 function NoGroup({ uid, savedName }: { uid: string; savedName: string }) {
   const [name, setName] = useState(savedName);
   const [groupName, setGroupName] = useState("");
@@ -140,6 +145,7 @@ function NoGroup({ uid, savedName }: { uid: string; savedName: string }) {
   );
 }
 
+// Shown once the user is in a group: invite code, sharing toggle and who's sharing.
 function GroupDetails({
   uid,
   code,
@@ -150,6 +156,7 @@ function GroupDetails({
   sharing: boolean;
 }) {
   const { group, locations } = useGroup(code);
+  // Re-render every 30 s so "last seen" labels stay current
   const now = useNow(30_000);
   const sharingNow = locations.filter((l) => isFresh(l, now));
 
