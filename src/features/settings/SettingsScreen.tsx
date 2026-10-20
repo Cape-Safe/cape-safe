@@ -1,8 +1,9 @@
 // SettingsScreen.tsx
-// Settings screen for Cape Safe. UI only for now: see the "TODO: connect"
-// comments for where Firebase and navigation need to be wired in.
+// Settings screen for Cape Safe. The toggles are saved to the signed-in
+// user's Firestore profile (users/{uid}.settings). Edit profile and Change
+// password still need real accounts, so they show "coming soon".
 
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import {
   Alert,
   Image,
@@ -17,7 +18,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { useMyProfile } from '@/hooks/use-my-profile';
 import { useTheme } from '@/hooks/use-theme';
+import { updateProfile } from '@/services/users';
+import type { UserSettings } from '@/types';
 
 import { ScaledText } from './ScaledText';
 import { setLargeText, useAccessibility } from './accessibility';
@@ -33,10 +37,17 @@ type CurrentUser = {
   avatarUrl?: string;
 };
 
-// TODO: connect to the signed-in Firebase user (src/services/firebase.ts).
-const DEFAULT_USER: CurrentUser = {
-  name: 'Denzel Chingodza',
-  email: 'denzel.chingodza@icloud.com',
+// Shown until the user has a name or email. Everyone starts as an anonymous guest.
+const GUEST_USER: CurrentUser = {
+  name: 'Guest',
+  email: 'Not signed in with an email yet',
+};
+
+const DEFAULT_SETTINGS: UserSettings = {
+  pushAlerts: true,
+  shareLocationByDefault: false,
+  largeText: false,
+  colourBlindMode: false,
 };
 
 type SettingsRowProps = {
@@ -113,7 +124,7 @@ type SettingsScreenProps = {
 };
 
 export default function SettingsScreen({
-  user = DEFAULT_USER,
+  user: userOverride,
   onEditProfile = () => showComingSoon('Editing your profile'),
   onChangePassword = () => showComingSoon('Changing your password'),
   onPrivacyPolicy,
@@ -140,11 +151,33 @@ export default function SettingsScreen({
     },
   });
 
-  // TODO: read and save these from the user's stored settings (Firestore users/{uid}).
-  const [pushAlerts, setPushAlerts] = useState(true);
-  const [shareLocationByDefault, setShareLocationByDefault] = useState(false);
+  const { uid, profile } = useMyProfile();
   const { largeText } = useAccessibility();
-  const [colourBlindMode, setColourBlindMode] = useState(false);
+
+  // Saved settings win. Changes made before sign-in finishes are kept locally
+  // and saved with the next change.
+  const [local, setLocal] = useState<Partial<UserSettings>>({});
+  const settings: UserSettings = { ...DEFAULT_SETTINGS, ...local, ...profile?.settings };
+
+  function saveSetting<K extends keyof UserSettings>(key: K, value: UserSettings[K]) {
+    setLocal((current) => ({ ...current, [key]: value }));
+    if (!uid) return;
+    updateProfile(uid, { settings: { ...settings, [key]: value } }).catch(() => {
+      Alert.alert('Could not save', 'Check your connection and try again.');
+    });
+  }
+
+  // Apply the saved Larger text choice when the profile loads.
+  const savedLargeText = profile?.settings?.largeText;
+  useEffect(() => {
+    if (savedLargeText !== undefined) setLargeText(savedLargeText);
+  }, [savedLargeText]);
+
+  const user: CurrentUser =
+    userOverride ??
+    (profile?.displayName
+      ? { name: profile.displayName, email: profile.email ?? GUEST_USER.email, avatarUrl: profile.avatarUrl }
+      : GUEST_USER);
 
   const initials = user.name
     .split(' ')
@@ -202,9 +235,9 @@ export default function SettingsScreen({
           <SettingsRow
             label="Push alerts"
             description="Storm warnings and road closures from admins"
-            value={pushAlerts}
-            // TODO: push notifications are out of v1 scope (see docs/ROADMAP.md).
-            onValueChange={setPushAlerts}
+            value={settings.pushAlerts}
+            // Saved now. Sending push notifications is out of v1 scope (docs/ROADMAP.md).
+            onValueChange={(next) => saveSetting('pushAlerts', next)}
           />
         </SettingsSection>
 
@@ -212,9 +245,9 @@ export default function SettingsScreen({
           <SettingsRow
             label="Share my location by default"
             description="Applies when you share your location"
-            value={shareLocationByDefault}
-            // TODO: save as the default for the SOS "share location" action.
-            onValueChange={setShareLocationByDefault}
+            value={settings.shareLocationByDefault}
+            // Saved now. TODO: use it as the default for the SOS "share location" action.
+            onValueChange={(next) => saveSetting('shareLocationByDefault', next)}
           />
         </SettingsSection>
 
@@ -223,16 +256,19 @@ export default function SettingsScreen({
             label="Larger text"
             description="Increases text size across the app"
             value={largeText}
-            // Works on the settings screens now. Other screens grow too once
-            // ThemedText reads useAccessibility().textScale (see accessibility.ts).
-            onValueChange={setLargeText}
+            // Saved now. Other screens grow too once ThemedText reads
+            // useAccessibility().textScale (see accessibility.ts).
+            onValueChange={(next) => {
+              setLargeText(next);
+              saveSetting('largeText', next);
+            }}
           />
           <SettingsRow
             label="Colour-blind friendly mode"
             description="Adjusts the map and risk colours"
-            value={colourBlindMode}
-            // TODO: needs an app-wide setting before this has any effect.
-            onValueChange={setColourBlindMode}
+            value={settings.colourBlindMode}
+            // Saved now. TODO: the map and risk colours need to read this before it has any effect.
+            onValueChange={(next) => saveSetting('colourBlindMode', next)}
           />
         </SettingsSection>
 

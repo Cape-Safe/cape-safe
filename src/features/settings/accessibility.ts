@@ -3,8 +3,8 @@
 // change what other screens look like without needing a provider in the
 // root layout.
 //
-// NOTE: kept in memory only for now, so it resets when the app restarts.
-// TODO: save it (for example in the user's Firestore profile) once storage exists.
+// NOTE: this store is in memory. SettingsScreen saves the choice to the user's
+// Firestore profile and sets it again here when the profile loads.
 
 import { useSyncExternalStore } from 'react';
 
