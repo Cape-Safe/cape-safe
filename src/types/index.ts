@@ -17,14 +17,15 @@ export type UserSettings = {
 
 export type UserProfile = {
   displayName: string;
-  email: string;
+  email?: string;
   phone?: string;
   homeCountry?: string;
   avatarUrl?: string;
-  emergencyContacts: EmergencyContact[];
+  emergencyContacts?: EmergencyContact[];
+  locationSharing?: boolean;
   groupIds: string[];
-  settings: UserSettings;
-  createdAt: Timestamp;
+  settings?: UserSettings;
+  createdAt?: Timestamp;
 };
 
 export type Group = {

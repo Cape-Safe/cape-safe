@@ -2,6 +2,12 @@ import * as Location from "expo-location";
 import { AppleMaps, GoogleMaps, useLocationPermissions } from "expo-maps";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
+
+import { isFresh, lastSeenLabel } from "@/features/groups/lastSeen";
+import { useGroup } from "@/hooks/use-group";
+import { useMyProfile } from "@/hooks/use-my-profile";
+import { useNow } from "@/hooks/use-now";
+
 import { buildHeatmapCircles } from "./Heatmap";
 import { getCapeTownCrimeHeatmapPoints } from "./crimeRiskScore";
 import type { FilterKey, Filters } from "./FilterChips";
@@ -30,6 +36,19 @@ export default function MapScreen() {
     () => buildHeatmapCircles(getCapeTownCrimeHeatmapPoints()),
     [],
   );
+
+  // Group members who are sharing (not you, not stale).
+  const { uid, groupCode } = useMyProfile();
+  const { locations } = useGroup(groupCode);
+  const now = useNow(30_000);
+  const memberMarkers = locations
+    .filter((l) => l.uid !== uid && isFresh(l, now))
+    .map((l) => ({
+      id: l.uid,
+      coordinates: l.coordinates,
+      title: l.displayName,
+      snippet: `Last seen ${lastSeenLabel(l, now)}`,
+    }));
 
   const stations = useMemo(() => loadStations(), []);
   const alert = useActiveAlert();
@@ -124,7 +143,7 @@ export default function MapScreen() {
   );
 
   if (Platform.OS === "ios") {
-    const markers = filters.police
+    const stationMarkers = filters.police
       ? stations.map((s) => ({
           id: s.station,
           coordinates: stationLocation(s),
@@ -143,7 +162,7 @@ export default function MapScreen() {
           properties={{ isMyLocationEnabled: showUserLocation }}
           uiSettings={{ myLocationButtonEnabled: false }}
           circles={circles}
-          markers={markers}
+          markers={[...stationMarkers, ...memberMarkers]}
           polylines={polylines}
           onMarkerClick={handleMarkerClick}
         />
@@ -152,7 +171,7 @@ export default function MapScreen() {
     );
   }
   if (Platform.OS === "android") {
-    const markers = filters.police
+    const stationMarkers = filters.police
       ? stations.map((s) => ({
           id: s.station,
           coordinates: stationLocation(s),
@@ -170,7 +189,7 @@ export default function MapScreen() {
           properties={{ isMyLocationEnabled: showUserLocation }}
           uiSettings={{ myLocationButtonEnabled: false }}
           circles={circles}
-          markers={markers}
+          markers={[...stationMarkers, ...memberMarkers]}
           polylines={polylines}
           onMarkerClick={handleMarkerClick}
         />
