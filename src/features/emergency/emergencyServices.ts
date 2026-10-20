@@ -2,15 +2,10 @@ import type { SymbolViewProps } from 'expo-symbols';
 
 export type EmergencyService = {
   id: string;
-  /** Name shown on the row. */
   name: string;
-  /** Name read out by screen readers, e.g. "SAPS Police". */
   a11yName: string;
-  /** Digits only, passed to `tel:`. */
   dial: string;
-  /** Number as shown on screen, e.g. "021 596 1999". */
   display: string;
-  /** Background colour of the round icon. */
   color: string;
   icon: SymbolViewProps['name'];
 };
@@ -44,8 +39,7 @@ export const emergencyServices: EmergencyService[] = [
     icon: { ios: 'cross.case.fill', android: 'local_hospital', web: 'local_hospital' },
   },
   {
-    // TODO(verify): 0861 555 777 is the 24-hour line. Source: Western Cape Government,
-    // https://www.westerncape.gov.za/health-wellness/know-who-you-can-call-emergency
+   
     id: 'poisons',
     name: 'Poisons Information Helpline of the Western Cape',
     a11yName: 'Poisons Information Helpline of the Western Cape',
@@ -55,9 +49,7 @@ export const emergencyServices: EmergencyService[] = [
     icon: { ios: 'exclamationmark.triangle.fill', android: 'warning', web: 'warning' },
   },
   {
-    // TODO(verify): 021 918 3512 (also 021 918 3449 / 3452). Source: Western Cape Government,
-    // https://westerncape.gov.za/service/reporting-missing-person
-    // An older 2017 news article quotes 021 467 8236 for the Western Cape bureau, so confirm with SAPS.
+    
     id: 'missing',
     name: 'Bureau of Missing Persons',
     a11yName: 'Bureau of Missing Persons',
@@ -76,9 +68,7 @@ export const emergencyServices: EmergencyService[] = [
     icon: { ios: 'flame.fill', android: 'local_fire_department', web: 'local_fire_department' },
   },
   {
-    // TODO(verify): 087 094 9774 is the NSRI Emergency Operations Centre. Source: NSRI spokesperson
-    // Andrew Ingram, EWN, 22 Sept 2026,
-    // https://www.ewn.co.za/2026/09/22/nsri-urges-safety-prioritisation-after-uptick-in-coastline-rescue-incidents
+    
     id: 'nsri',
     name: 'National Sea Rescue Institute (NSRI)',
     a11yName: 'National Sea Rescue Institute',
@@ -88,8 +78,7 @@ export const emergencyServices: EmergencyService[] = [
     icon: { ios: 'lifepreserver.fill', android: 'sailing', web: 'sailing' },
   },
   {
-    // TODO(verify): 021 937 0300 is the WSAR emergency number. Source: WSAR statement, 8 April 2026,
-    // https://www.goodthingsguy.com/wsar-volunteers-help-hikers-easter/
+    
     id: 'wsar',
     name: 'Wilderness Search & Rescue (WSAR)',
     a11yName: 'Wilderness Search and Rescue',
