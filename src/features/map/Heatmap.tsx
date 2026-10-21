@@ -61,7 +61,7 @@ export function buildHeatmapCircles(
 ): HeatmapCircle[] {
   if (points.length === 0) return [];
 
-  const radius = options?.radius ?? 1600;
+  const radius = options?.radius ?? 1200;
   const gradient = options?.gradient ?? DEFAULT_GRADIENT;
   const opacity = options?.opacity ?? 0.8;
 
