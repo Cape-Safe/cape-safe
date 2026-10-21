@@ -18,5 +18,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         locationPermission: "Allow $(PRODUCT_NAME) to use your location",
       },
     ],
+    [
+      "expo-image-picker",
+      {
+        cameraPermission:
+          "Allow $(PRODUCT_NAME) to use your camera so you can photograph documents for your emergency profile.",
+        photosPermission:
+          "Allow $(PRODUCT_NAME) to access your photos so you can add documents to your emergency profile.",
+      },
+    ],
   ],
 });

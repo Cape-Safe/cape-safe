@@ -10,6 +10,86 @@ service cloud.firestore {
       allow read, write: if isSelf(uid);
     }
 
+    // ── Emergency profile and documents: private, real accounts only ────
+    // Guests (anonymous sign-in) are refused. Files live in Storage; this is
+    // just their metadata. Rules can't count documents, so the 10-document
+    // limit is enforced by the app only. Storage rules cap size and type.
+    function realUser(uid) {
+      return isSelf(uid)
+        && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+    function optStr(d, key, max) {
+      return !(key in d) || (d[key] is string && d[key].size() <= max);
+    }
+    function validKin(k) {
+      return k is map
+        && k.keys().hasOnly(['name', 'relationship', 'phone', 'email', 'country'])
+        && k.name is string && k.name.size() > 0 && k.name.size() <= 200
+        && k.phone is string && k.phone.size() > 0 && k.phone.size() <= 40
+        && optStr(k, 'relationship', 200)
+        && optStr(k, 'email', 200)
+        && optStr(k, 'country', 200);
+    }
+    function validAid(a) {
+      return a is map
+        && a.keys().hasOnly(['provider', 'memberNumber', 'planName', 'assistancePhone', 'expiry'])
+        && optStr(a, 'provider', 200)
+        && optStr(a, 'memberNumber', 200)
+        && optStr(a, 'planName', 200)
+        && optStr(a, 'assistancePhone', 40)
+        && optStr(a, 'expiry', 10);
+    }
+    function validProfile() {
+      let d = request.resource.data;
+      return d.keys().hasOnly([
+          'fullName', 'dateOfBirth', 'nationality', 'homeCountry', 'idNumber',
+          'phone', 'bloodType', 'allergies', 'conditions', 'medication',
+          'medicalNotes', 'medicalAid', 'nextOfKin', 'accommodationName',
+          'accommodationAddress', 'consentAcceptedAt', 'updatedAt'])
+        && d.nextOfKin is list && d.nextOfKin.size() <= 3
+        && (d.nextOfKin.size() < 1 || validKin(d.nextOfKin[0]))
+        && (d.nextOfKin.size() < 2 || validKin(d.nextOfKin[1]))
+        && (d.nextOfKin.size() < 3 || validKin(d.nextOfKin[2]))
+        && (!('medicalAid' in d) || validAid(d.medicalAid))
+        && optStr(d, 'fullName', 200)
+        && optStr(d, 'dateOfBirth', 10)
+        && optStr(d, 'nationality', 200)
+        && optStr(d, 'homeCountry', 200)
+        && optStr(d, 'idNumber', 200)
+        && optStr(d, 'phone', 40)
+        && optStr(d, 'bloodType', 10)
+        && optStr(d, 'allergies', 200)
+        && optStr(d, 'conditions', 200)
+        && optStr(d, 'medication', 200)
+        && optStr(d, 'medicalNotes', 1000)
+        && optStr(d, 'accommodationName', 200)
+        && optStr(d, 'accommodationAddress', 200)
+        && d.consentAcceptedAt is timestamp
+        && d.updatedAt == request.time;
+    }
+    function validDocument(uid, docId) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['type', 'label', 'storagePath', 'mimeType', 'sizeBytes', 'uploadedAt'])
+        && d.type in ['id', 'medical_aid_card', 'insurance_policy', 'other']
+        && d.label is string && d.label.size() <= 100
+        && d.mimeType in ['image/jpeg', 'image/png', 'application/pdf']
+        && d.sizeBytes is int && d.sizeBytes > 0 && d.sizeBytes <= 5242880
+        && d.storagePath is string
+        && d.storagePath.matches('users/' + uid + '/documents/' + docId + '/[^/]+')
+        && d.uploadedAt == request.time;
+    }
+
+    match /users/{uid}/private/{docId} {
+      allow read, delete: if realUser(uid);
+      allow create, update: if realUser(uid) && docId == 'emergencyProfile' && validProfile();
+    }
+
+    match /users/{uid}/documents/{docId} {
+      allow read, delete: if realUser(uid);
+      allow create: if realUser(uid) && validDocument(uid, docId);
+      // No updates: replacing a document uploads a new one and deletes the old.
+    }
+
     // ── Areas: public; only the crowd-rating totals can change, ────────
     // ── and only by exactly one report's worth ─────────────────────────
     match /areas/{areaId} {

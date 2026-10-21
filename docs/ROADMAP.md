@@ -173,3 +173,4 @@ iOS build · push notifications for urgent alerts · offline cached data · Plac
 
 - **Map search and directions** (`feature/map-search`): Google Places (New) autocomplete and details, Routes API for drive/walk routes drawn on the map, area safety score and a night-time caution for high-risk destinations, recent searches on the device. Needs `EXPO_PUBLIC_GOOGLE_PLACES_API_KEY` (see README).
 - **Unit tests**: Jest (`jest-expo`) is set up. Run `npm test`.
+- **Emergency profile and document vault** (`feature/emergency-profile`): medical info, medical aid or insurance, next of kin (up to 3), optional accommodation, and document uploads (ID, medical aid card, insurance) stored in Firebase Storage. Private to real accounts, consent step on first save, "Delete all my emergency data". New files: `storage.rules`, `firebase.json`, rules in `firestore.rules`. Needs a new dev build (native packages `expo-image-picker`, `expo-document-picker`).

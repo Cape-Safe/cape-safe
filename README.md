@@ -10,7 +10,7 @@ Cape Safe helps a visitor see where they are and what is around them, get help i
 
 1. **Map:** your location, police stations, areas to be careful in, and **search with directions** for any place in Cape Town.
 2. **SOS:** one-tap calls to South African emergency numbers and sharing your location with your emergency contacts.
-3. **Profile:** sign in, save emergency contacts, home country and medical notes.
+3. **Emergency profile:** sign in, then save your ID number, medical details, medical aid or insurance, next of kin, and upload photos or PDFs of your documents (Settings, Emergency profile). A summary with tap-to-call next of kin appears on the SOS screen.
 4. **Tips and alerts:** Cape Town safety tips and current alerts.
 5. **Settings:** account, notification, location and accessibility preferences.
 
@@ -77,6 +77,15 @@ EXPO_PUBLIC_ANDROID_CERT_SHA1=AA:BB:CC:...
 ```
 
 In Google Cloud, enable **Places API (New)** and **Routes API** on the project. `EXPO_PUBLIC_` values are bundled into the app, so use a key that is restricted to those two APIs and to the app (Android package and SHA-1), and set a billing budget alert. Without the key the search bar shows "Search isn't set up on this build" and everything else keeps working. Recent searches (last 5) are stored on the device only.
+### Emergency profile: Firebase setup
+
+The emergency profile stores text in Firestore (`users/{uid}/private/emergencyProfile`, `users/{uid}/documents/{docId}`) and the uploaded files in **Firebase Storage** (`users/{uid}/documents/{docId}/{file}`). Firestore documents are limited to 1 MiB, so files never go there.
+
+1. In the Firebase console, create a Storage bucket (Build, Storage) and put its name in `.env.local` as `EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET`.
+2. Deploy the rules: `firebase deploy --only firestore:rules,storage`.
+3. Only real accounts can use it. Guests (anonymous sign-in) are refused by the rules.
+
+Rules cap files at 5 MB and JPEG, PNG or PDF only. The limit of 10 documents per user is enforced in the app only. This feature adds two native packages (`expo-image-picker`, `expo-document-picker`), so everyone needs a new development build.
 
 ### Run the app
 

@@ -1,0 +1,21 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Emergency documents: only the owner, only real (non-guest) accounts,
+    // images (JPEG/PNG) or PDF, at most 5 MB. Nothing else is readable.
+    match /users/{uid}/documents/{docId}/{fileName} {
+      function realOwner() {
+        return request.auth != null
+          && request.auth.uid == uid
+          && request.auth.token.firebase.sign_in_provider != 'anonymous';
+      }
+
+      allow read, delete: if realOwner();
+      allow create: if realOwner()
+        && request.resource.size > 0
+        && request.resource.size <= 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/jpeg|image/png|application/pdf');
+      // No updates: replacing a document uploads a new file and deletes the old.
+    }
+  }
+}

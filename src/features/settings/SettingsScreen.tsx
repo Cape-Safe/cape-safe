@@ -137,6 +137,7 @@ type SettingsScreenProps = {
   onChangePassword?: () => void;
   onPrivacyPolicy?: () => void;
   onTermsOfUse?: () => void;
+  onEmergencyProfile?: () => void;
   onLogOut?: () => void;
   onSignIn?: () => void;
 };
@@ -147,6 +148,7 @@ export default function SettingsScreen({
   onChangePassword = () => showComingSoon("Changing your password"),
   onPrivacyPolicy,
   onTermsOfUse,
+  onEmergencyProfile,
   onLogOut,
   onSignIn,
 }: SettingsScreenProps) {
@@ -281,6 +283,14 @@ export default function SettingsScreen({
               onPress={onSignIn}
             />
           )}
+        </SettingsSection>
+
+        <SettingsSection title="Emergency">
+          <SettingsRow
+            label="Emergency profile"
+            description="Medical info, next of kin and documents"
+            onPress={onEmergencyProfile}
+          />
         </SettingsSection>
 
         <SettingsSection title="Notifications">

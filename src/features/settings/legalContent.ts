@@ -38,6 +38,10 @@ export const PRIVACY_POLICY: LegalDocument = {
       body: 'Account and profile information will be stored using Firebase, a service provided by Google. Only you can read and change your own profile.',
     },
     {
+      heading: 'Emergency profile and documents',
+      body: 'If you choose to use the emergency profile, you can save sensitive information: your passport or ID number, medical details, medical aid or insurance details, next of kin, and photos or PDFs of your documents. You decide what to add. It is stored in your own account using Firebase (Google), is only visible to you while signed in, and is never shared with your group or used for location sharing. We ask for your agreement before you save anything. You can edit or delete any item at any time, and "Delete all my emergency data" removes your details and every uploaded file.',
+    },
+    {
       heading: 'Your rights',
       body: 'You can ask to see, correct or delete your information at any time. This is in line with the South African Protection of Personal Information Act (POPIA).',
     },

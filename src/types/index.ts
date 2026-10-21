@@ -104,3 +104,60 @@ export type RouteSummary = {
   /** True when this is a straight line estimate, not a real road route. */
   estimated: boolean;
 };
+
+// ── Emergency profile and document vault (private to the user) ──────────
+export type NextOfKin = {
+  name: string;
+  relationship: string;
+  phone: string;
+  email?: string;
+  country?: string;
+};
+
+export type MedicalAidInfo = {
+  provider?: string;
+  memberNumber?: string;
+  planName?: string;
+  assistancePhone?: string;
+  /** YYYY-MM-DD */
+  expiry?: string;
+};
+
+export type EmergencyProfile = {
+  fullName?: string;
+  /** YYYY-MM-DD */
+  dateOfBirth?: string;
+  nationality?: string;
+  homeCountry?: string;
+  /** Passport or national ID number. Never log this. */
+  idNumber?: string;
+  phone?: string;
+  bloodType?: string;
+  allergies?: string;
+  conditions?: string;
+  medication?: string;
+  medicalNotes?: string;
+  medicalAid?: MedicalAidInfo;
+  nextOfKin: NextOfKin[];
+  accommodationName?: string;
+  accommodationAddress?: string;
+  /** Set the first time the user accepts the privacy notice. */
+  consentAcceptedAt?: Timestamp;
+  updatedAt?: Timestamp;
+};
+
+export type DocumentType =
+  | "id"
+  | "medical_aid_card"
+  | "insurance_policy"
+  | "other";
+
+export type UserDocument = {
+  id: string;
+  type: DocumentType;
+  label: string;
+  storagePath: string;
+  mimeType: string;
+  sizeBytes: number;
+  uploadedAt: Timestamp;
+};

@@ -15,6 +15,7 @@ import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
 
+import { EmergencyInfoCard } from "./EmergencyInfoCard";
 import { LOGO_IMAGE } from "./emergencyAssets";
 import { emergencyServices, type EmergencyService } from "./emergencyServices";
 
@@ -180,6 +181,8 @@ export default function EmergencyScreen() {
           </View>
         )}
       </View>
+
+      <EmergencyInfoCard />
 
       <View
         style={[

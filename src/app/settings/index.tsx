@@ -29,6 +29,7 @@ export default function Settings() {
       }
       onPrivacyPolicy={() => router.push("/settings/privacy-policy")}
       onTermsOfUse={() => router.push("/settings/terms-of-use")}
+      onEmergencyProfile={() => router.push("/settings/emergency-profile")}
     />
   );
 }
