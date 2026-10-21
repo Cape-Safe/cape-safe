@@ -88,3 +88,15 @@ export function zoomForDistance(km: number) {
   if (km < 8) return 13;
   return 12;
 }
+
+// Risk around any point on the map, borrowed from the nearest police precinct
+// (the SAPS data is per station, not per street).
+export function riskNear(stations: Station[], point: LatLng) {
+  if (stations.length === 0) return null;
+  const station = nearestStation(stations, point);
+  return {
+    station,
+    level: riskLevel(station.risk),
+    score: Math.round(station.risk * 100),
+  };
+}

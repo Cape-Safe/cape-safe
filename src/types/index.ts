@@ -78,3 +78,29 @@ export type SafetyAlert = {
   expiresAt: Timestamp;
   createdAt: Timestamp;
 };
+
+// ── Map search and directions ───────────────────────────────────────────
+export type TravelMode = "drive" | "walk";
+
+/** One row in the search suggestions list (also used for recent searches). */
+export type PlaceSuggestion = {
+  placeId: string;
+  primaryText: string;
+  secondaryText: string;
+};
+
+export type PlaceDetails = {
+  placeId: string;
+  name: string;
+  address: string;
+  coordinates: Coordinates;
+};
+
+export type RouteSummary = {
+  mode: TravelMode;
+  distanceMeters: number;
+  durationSeconds: number;
+  points: Coordinates[];
+  /** True when this is a straight line estimate, not a real road route. */
+  estimated: boolean;
+};

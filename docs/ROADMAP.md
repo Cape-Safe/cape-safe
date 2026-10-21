@@ -165,3 +165,11 @@ Shared TypeScript types for all of these live in `src/types/index.ts`.
 ## 8. After v1 (if there's time or a next phase)
 
 iOS build · push notifications for urgent alerts · offline cached data · Places API for wider coverage · more cities (Johannesburg, Durban) · translations (German, French, Mandarin) · background live-location sharing.
+
+
+---
+
+## 9. Added after the original plan
+
+- **Map search and directions** (`feature/map-search`): Google Places (New) autocomplete and details, Routes API for drive/walk routes drawn on the map, area safety score and a night-time caution for high-risk destinations, recent searches on the device. Needs `EXPO_PUBLIC_GOOGLE_PLACES_API_KEY` (see README).
+- **Unit tests**: Jest (`jest-expo`) is set up. Run `npm test`.

@@ -3,17 +3,21 @@
 // "Nearest help" and locate buttons, and the area sheet. It holds no map
 // logic. MapScreen owns the state and passes it in.
 
+import { useState, type ComponentProps } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
-import type { SafetyAlert } from "@/types";
+import type { PlaceSuggestion, SafetyAlert } from "@/types";
 
 import { AlertBanner } from "./AlertBanner";
 import { AreaSheet } from "./AreaSheet";
 import { FilterChips, type FilterKey, type Filters } from "./FilterChips";
+import { PlaceSheet } from "./PlaceSheet";
 import type { Station } from "./mapRisk";
+import { SearchBar } from "./SearchBar";
+import type { MapSearch } from "./useMapSearch";
 import { CARD_SHADOW, MAP_BOTTOM_INSET } from "./mapTheme";
 
 type Props = {
@@ -25,6 +29,10 @@ type Props = {
   helpActive: boolean;
   onNearestHelp: () => void;
   onLocate: () => void;
+  search: MapSearch;
+  onChooseSuggestion: (item: PlaceSuggestion) => void;
+  // Props for the searched place sheet. Spread from MapScreen.
+  placeSheet: ComponentProps<typeof PlaceSheet> | null;
 };
 
 export function MapOverlay({
@@ -36,14 +44,25 @@ export function MapOverlay({
   helpActive,
   onNearestHelp,
   onLocate,
+  search,
+  onChooseSuggestion,
+  placeSheet,
 }: Props) {
   const theme = useTheme();
+  const [searchFocused, setSearchFocused] = useState(false);
 
   return (
     <View style={styles.fill} pointerEvents="box-none">
       <View style={styles.top} pointerEvents="box-none">
-        {filters.alerts && alert && <AlertBanner alert={alert} />}
-        <FilterChips filters={filters} onToggle={onToggleFilter} />
+        <SearchBar
+          search={search}
+          focused={searchFocused}
+          onFocusChange={setSearchFocused}
+          onChoose={onChooseSuggestion}
+        />
+        {/* Hidden while searching so the suggestions never overlap them. */}
+        {!searchFocused && filters.alerts && alert && <AlertBanner alert={alert} />}
+        {!searchFocused && <FilterChips filters={filters} onToggle={onToggleFilter} />}
       </View>
 
       <View
@@ -53,7 +72,7 @@ export function MapOverlay({
         ]}
         pointerEvents="box-none"
       >
-        {!selected && (
+        {!selected && !placeSheet && (
           <View style={styles.buttonRow} pointerEvents="box-none">
             <Pressable
               onPress={onNearestHelp}
@@ -83,6 +102,7 @@ export function MapOverlay({
           </View>
         )}
         {selected && <AreaSheet station={selected} onClose={onCloseSheet} />}
+        {placeSheet && <PlaceSheet {...placeSheet} />}
       </View>
     </View>
   );

@@ -7,6 +7,8 @@ import { isFresh, lastSeenLabel } from "@/features/groups/lastSeen";
 import { useGroup } from "@/hooks/use-group";
 import { useMyProfile } from "@/hooks/use-my-profile";
 import { useNow } from "@/hooks/use-now";
+import { fetchRoute } from "@/services/directions";
+import type { PlaceDetails, PlaceSuggestion, TravelMode } from "@/types";
 
 import { buildHeatmapCircles } from "./Heatmap";
 import { getSuburbHeatmapPoints } from "./suburbHeatmapPoints";
@@ -17,13 +19,19 @@ import {
   distanceKm,
   loadStations,
   nearestStation,
+  riskNear,
   stationLocation,
   zoomForDistance,
   type LatLng,
 } from "./mapRisk";
 import { ROUTE_COLOR, STATION_COLOR } from "./mapTheme";
 import { MapOverlay } from "./MapOverlay";
+import type { RouteState } from "./PlaceSheet";
+import { straightLineRoute } from "./routeUtils";
+import { useMapSearch } from "./useMapSearch";
 import { useActiveAlert } from "./useActiveAlert";
+
+const DESTINATION_ID = "search-destination";
 
 // Starting view is central Cape Town. The camera moves to the user once their location is known.
 const cameraPosition = {
@@ -96,6 +104,63 @@ export default function MapScreen() {
     [stations, origin],
   );
 
+  // ── Search and directions ─────────────────────────────────────────────
+  const search = useMapSearch(origin);
+  const [place, setPlace] = useState<PlaceDetails | null>(null);
+  const [mode, setMode] = useState<TravelMode>("drive");
+  const [routeState, setRouteState] = useState<RouteState>({ status: "idle" });
+
+  const showRoute = useCallback(
+    (from: LatLng, to: LatLng, km: number) =>
+      moveCamera(
+        {
+          latitude: (from.latitude + to.latitude) / 2,
+          longitude: (from.longitude + to.longitude) / 2,
+        },
+        zoomForDistance(km),
+      ),
+    [moveCamera],
+  );
+
+  const loadRoute = async (target: PlaceDetails, travelMode: TravelMode) => {
+    setRouteState({ status: "loading" });
+    try {
+      const route = await fetchRoute(origin, target.coordinates, travelMode);
+      setRouteState({ status: "ready", route });
+      showRoute(origin, target.coordinates, route.distanceMeters / 1000);
+    } catch {
+      const route = straightLineRoute(origin, target.coordinates, travelMode);
+      setRouteState({
+        status: "fallback",
+        route,
+        message:
+          "Couldn't load road directions, so this is a straight line. Use Open in Maps for turn-by-turn directions.",
+      });
+      showRoute(origin, target.coordinates, route.distanceMeters / 1000);
+    }
+  };
+
+  const handleChooseSuggestion = async (item: PlaceSuggestion) => {
+    const details = await search.choose(item);
+    if (!details) return;
+    setPlace(details);
+    setRouteState({ status: "idle" });
+    setSelectedId(null);
+    setHelpActive(false);
+    moveCamera(details.coordinates, 15);
+  };
+
+  const handleModeChange = (next: TravelMode) => {
+    setMode(next);
+    // Refresh the route if one is already showing.
+    if (place && routeState.status !== "idle") loadRoute(place, next);
+  };
+
+  const closePlace = () => {
+    setPlace(null);
+    setRouteState({ status: "idle" });
+  };
+
   const toggleFilter = (key: FilterKey) =>
     setFilters((current) => ({ ...current, [key]: !current[key] }));
 
@@ -121,19 +186,52 @@ export default function MapScreen() {
 
   const handleMarkerClick = (event: { id?: string }) => {
     if (!event.id) return;
+    if (event.id === DESTINATION_ID) return;
     setSelectedId(event.id);
     setHelpActive(false);
+    closePlace();
   };
 
-  const polylines = helpActive
-    ? [
-        {
-          id: "nearest-help",
-          coordinates: [origin, stationLocation(nearest)],
-          color: ROUTE_COLOR,
-          width: 6,
-        },
-      ]
+  const polylines = [
+    ...(helpActive
+      ? [
+          {
+            id: "nearest-help",
+            coordinates: [origin, stationLocation(nearest)],
+            color: ROUTE_COLOR,
+            width: 6,
+          },
+        ]
+      : []),
+    ...("route" in routeState
+      ? [
+          {
+            id: "searched-route",
+            coordinates: routeState.route.points,
+            color: ROUTE_COLOR,
+            width: 6,
+          },
+        ]
+      : []),
+  ];
+
+  const placeRisk = place ? riskNear(stations, place.coordinates) : null;
+  const placeSheet = place
+    ? {
+        place,
+        distanceKmFromUser: distanceKm(origin, place.coordinates),
+        usingDefaultLocation: !userPos,
+        risk: placeRisk ? { level: placeRisk.level, score: placeRisk.score } : null,
+        mode,
+        routeState,
+        onModeChange: handleModeChange,
+        onGetDirections: () => loadRoute(place, mode),
+        onClose: closePlace,
+      }
+    : null;
+
+  const destinationMarker = place
+    ? [{ id: DESTINATION_ID, coordinates: place.coordinates, title: place.name }]
     : [];
 
   const circles = filters.zones ? crimeHeatmapCircles : [];
@@ -148,6 +246,9 @@ export default function MapScreen() {
       helpActive={helpActive}
       onNearestHelp={handleNearestHelp}
       onLocate={handleLocate}
+      search={search}
+      onChooseSuggestion={handleChooseSuggestion}
+      placeSheet={placeSheet}
     />
   );
 
@@ -171,7 +272,7 @@ export default function MapScreen() {
           properties={{ isMyLocationEnabled: showUserLocation }}
           uiSettings={{ myLocationButtonEnabled: false }}
           circles={circles}
-          markers={[...stationMarkers, ...memberMarkers]}
+          markers={[...stationMarkers, ...memberMarkers, ...destinationMarker]}
           polylines={polylines}
           onMarkerClick={handleMarkerClick}
         />
@@ -198,7 +299,7 @@ export default function MapScreen() {
           properties={{ isMyLocationEnabled: showUserLocation }}
           uiSettings={{ myLocationButtonEnabled: false }}
           circles={circles}
-          markers={[...stationMarkers, ...memberMarkers]}
+          markers={[...stationMarkers, ...memberMarkers, ...destinationMarker]}
           polylines={polylines}
           onMarkerClick={handleMarkerClick}
         />

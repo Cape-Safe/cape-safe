@@ -8,7 +8,7 @@ Cape Safe helps a visitor see where they are and what is around them, get help i
 
 ## v1 features
 
-1. **Map:** your location, plus police stations, hospitals and areas to be careful in.
+1. **Map:** your location, police stations, areas to be careful in, and **search with directions** for any place in Cape Town.
 2. **SOS:** one-tap calls to South African emergency numbers and sharing your location with your emergency contacts.
 3. **Profile:** sign in, save emergency contacts, home country and medical notes.
 4. **Tips and alerts:** Cape Town safety tips and current alerts.
@@ -66,6 +66,18 @@ GOOGLE_MAPS_API_KEY=your_key_here
 
 `.env.local` is ignored by git.
 
+### Map search and directions (Google APIs)
+
+Search and directions call Google's REST APIs directly. Add these to `.env.local`:
+
+```
+EXPO_PUBLIC_GOOGLE_PLACES_API_KEY=your_key_here
+# Optional: lets a key restricted to the Android app work for these REST calls
+EXPO_PUBLIC_ANDROID_CERT_SHA1=AA:BB:CC:...
+```
+
+In Google Cloud, enable **Places API (New)** and **Routes API** on the project. `EXPO_PUBLIC_` values are bundled into the app, so use a key that is restricted to those two APIs and to the app (Android package and SHA-1), and set a billing budget alert. Without the key the search bar shows "Search isn't set up on this build" and everything else keeps working. Recent searches (last 5) are stored on the device only.
+
 ### Run the app
 
 ```bash
@@ -86,6 +98,7 @@ The map is not available on web, but the other screens render, for example the S
 
 ```bash
 npx expo lint        # lint
+npm test             # unit tests (Jest)
 npx tsc --noEmit     # typecheck
 npx expo-doctor      # diagnose dependency and config issues
 ```
