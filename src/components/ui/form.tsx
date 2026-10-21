@@ -1,18 +1,18 @@
 import {
-  Pressable,
   StyleSheet,
   TextInput,
-  useColorScheme,
-  View,
   type StyleProp,
   type ViewStyle,
+  View,
 } from "react-native";
 
+import { PressableScale } from "@/components/design/PressableScale";
+import { CardShadow, usePalette } from "@/constants/design";
 import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
 
-// Card, input and button styles match the SOS screen (EmergencyScreen.tsx).
+// Shared card, input and button styles, used by Settings, Group and Sign in.
 export function Card({
   children,
   style,
@@ -20,14 +20,12 @@ export function Card({
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
 }) {
-  const theme = useTheme();
-  const isDark = useColorScheme() === "dark";
+  const palette = usePalette();
   return (
     <View
       style={[
         styles.card,
-        { backgroundColor: isDark ? theme.backgroundElement : "#FFFFFF" },
-        isDark ? styles.cardBorderDark : styles.cardShadow,
+        { backgroundColor: palette.card, borderColor: palette.line },
         style,
       ]}
     >
@@ -37,14 +35,19 @@ export function Card({
 }
 
 export function Input(props: React.ComponentProps<typeof TextInput>) {
-  const theme = useTheme();
+  const palette = usePalette();
   return (
     <TextInput
-      placeholderTextColor={theme.textSecondary}
+      placeholderTextColor={palette.muted}
       {...props}
       style={[
         styles.input,
-        { color: theme.text, borderColor: theme.backgroundSelected },
+        {
+          color: palette.ink,
+          borderColor: palette.line,
+          backgroundColor: palette.screen,
+        },
+        props.style,
       ]}
     />
   );
@@ -61,33 +64,32 @@ export function Button({
 }) {
   const theme = useTheme();
   return (
-    <Pressable
+    <PressableScale
+      haptic
       onPress={onPress}
       disabled={disabled}
       accessibilityRole="button"
-      style={({ pressed }) => [
+      accessibilityState={{ disabled: !!disabled }}
+      style={[
         styles.button,
         { backgroundColor: theme.primary },
-        (pressed || disabled) && styles.buttonDimmed,
+        disabled && styles.buttonDisabled,
       ]}
     >
       <ScaledText style={[styles.buttonText, { color: theme.onPrimary }]}>
         {label}
       </ScaledText>
-    </Pressable>
+    </PressableScale>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
     padding: Spacing.three,
-    borderRadius: 28,
-    gap: Spacing.two,
-  },
-  cardShadow: { boxShadow: "0 8px 24px rgba(0,0,0,0.12)" },
-  cardBorderDark: {
+    borderRadius: 16,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "rgba(255,255,255,0.12)",
+    gap: Spacing.two,
+    boxShadow: CardShadow,
   },
   input: {
     borderWidth: 1,
@@ -97,11 +99,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    borderRadius: 999,
-    minHeight: 52,
+    borderRadius: 12,
+    minHeight: 50,
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonDimmed: { opacity: 0.5 },
+  buttonDisabled: { opacity: 0.45 },
   buttonText: { fontWeight: "700" },
 });
