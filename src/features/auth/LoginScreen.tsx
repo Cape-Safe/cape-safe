@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { Redirect } from "expo-router";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Button, Card, Input } from "@/components/ui/form";
 import { BottomTabInset, Spacing } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
-import { useMyProfile } from "@/hooks/use-my-profile";
 import {
   authErrorMessage,
   logIn,
-  logOut,
   register,
   resetPassword,
 } from "@/services/auth";
@@ -27,6 +25,8 @@ export default function LoginScreen() {
     );
   }
 
+  if (isLoggedIn) return <Redirect href="/settings" />;
+
   return (
     <ThemedView style={styles.screen}>
       <SafeAreaView edges={["top"]} style={styles.screen}>
@@ -34,40 +34,10 @@ export default function LoginScreen() {
           contentContainerStyle={styles.content}
           keyboardShouldPersistTaps="handled"
         >
-          {isLoggedIn ? <Account /> : <AuthForm />}
+          <AuthForm />
         </ScrollView>
       </SafeAreaView>
     </ThemedView>
-  );
-}
-
-function Account() {
-  const { user } = useAuth();
-  const { profile } = useMyProfile();
-  const [busy, setBusy] = useState(false);
-
-  async function handleSignOut() {
-    setBusy(true);
-    try {
-      await logOut();
-    } catch (err) {
-      Alert.alert("Couldn't sign out", authErrorMessage(err));
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return (
-    <>
-      <ThemedText type="title">Account</ThemedText>
-      <Card>
-        <ThemedText type="subtitle">
-          {profile?.displayName ?? "Signed in"}
-        </ThemedText>
-        <ThemedText>{user?.email}</ThemedText>
-      </Card>
-      <Button label="Sign out" disabled={busy} onPress={handleSignOut} />
-    </>
   );
 }
 

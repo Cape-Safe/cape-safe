@@ -42,7 +42,7 @@ export default function GroupScreen() {
         </ThemedText>
         <Button
           label="Sign in or register"
-          onPress={() => router.navigate("/login")}
+          onPress={() => router.navigate("/settings/login")}
         />
       </ThemedView>
     );
