@@ -3,8 +3,11 @@
 // "Nearest help" and locate buttons, and the area sheet. It holds no map
 // logic. MapScreen owns the state and passes it in.
 
-import { Pressable, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { PressableScale } from "@/components/design/PressableScale";
+import { usePalette } from "@/constants/design";
 import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
@@ -15,6 +18,10 @@ import { AreaSheet } from "./AreaSheet";
 import { FilterChips, type FilterKey, type Filters } from "./FilterChips";
 import type { Station } from "./mapRisk";
 import { CARD_SHADOW, MAP_BOTTOM_INSET } from "./mapTheme";
+
+// Android draws its own zoom buttons in the bottom right corner, so the
+// locate button sits above them.
+const ZOOM_CONTROLS_CLEARANCE = Platform.select({ android: 96, default: 0 });
 
 type Props = {
   alert: SafetyAlert | null;
@@ -38,10 +45,15 @@ export function MapOverlay({
   onLocate,
 }: Props) {
   const theme = useTheme();
+  const palette = usePalette();
+  const insets = useSafeAreaInsets();
 
   return (
     <View style={styles.fill} pointerEvents="box-none">
-      <View style={styles.top} pointerEvents="box-none">
+      <View
+        style={[styles.top, { paddingTop: insets.top + Spacing.two }]}
+        pointerEvents="box-none"
+      >
         {filters.alerts && alert && <AlertBanner alert={alert} />}
         <FilterChips filters={filters} onToggle={onToggleFilter} />
       </View>
@@ -55,7 +67,8 @@ export function MapOverlay({
       >
         {!selected && (
           <View style={styles.buttonRow} pointerEvents="box-none">
-            <Pressable
+            <PressableScale
+              haptic
               onPress={onNearestHelp}
               accessibilityRole="button"
               accessibilityLabel="Show nearest police station"
@@ -65,21 +78,24 @@ export function MapOverlay({
               <ScaledText type="smallBold" style={{ color: theme.onPrimary }}>
                 {helpActive ? "Hide nearest help" : "Nearest help"}
               </ScaledText>
-            </Pressable>
-            <Pressable
+            </PressableScale>
+            <PressableScale
               onPress={onLocate}
               accessibilityRole="button"
               accessibilityLabel="Centre map on my location"
               style={[
                 styles.locate,
                 {
-                  backgroundColor: theme.background,
-                  borderColor: theme.primary,
+                  backgroundColor: palette.card,
+                  borderColor: palette.accent,
+                  marginBottom: ZOOM_CONTROLS_CLEARANCE,
                 },
               ]}
             >
-              <ScaledText type="smallBold">Me</ScaledText>
-            </Pressable>
+              <ScaledText type="smallBold" style={{ color: palette.ink }}>
+                Me
+              </ScaledText>
+            </PressableScale>
           </View>
         )}
         {selected && <AreaSheet station={selected} onClose={onCloseSheet} />}
@@ -91,7 +107,6 @@ export function MapOverlay({
 const styles = StyleSheet.create({
   fill: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0 },
   top: {
-    paddingTop: Spacing.five,
     paddingHorizontal: Spacing.three,
     gap: Spacing.two,
   },
@@ -102,7 +117,7 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
     justifyContent: "space-between",
   },
   pill: {
@@ -121,5 +136,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     boxShadow: CARD_SHADOW,
   },
-  whiteText: { color: "#FFFFFF" },
 });

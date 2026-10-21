@@ -3,9 +3,9 @@
 
 import { StyleSheet, View } from "react-native";
 
+import { usePalette } from "@/constants/design";
 import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
-import { useTheme } from "@/hooks/use-theme";
 import type { SafetyAlert } from "@/types";
 
 import { ALERT_COLORS, CARD_SHADOW } from "./mapTheme";
@@ -17,7 +17,7 @@ const SEVERITY_LABEL: Record<SafetyAlert["severity"], string> = {
 };
 
 export function AlertBanner({ alert }: { alert: SafetyAlert }) {
-  const theme = useTheme();
+  const palette = usePalette();
   const color = ALERT_COLORS[alert.severity];
 
   return (
@@ -27,14 +27,20 @@ export function AlertBanner({ alert }: { alert: SafetyAlert }) {
       accessibilityLabel={`${SEVERITY_LABEL[alert.severity]}. ${alert.title}. ${alert.body}`}
       style={[
         styles.banner,
-        { backgroundColor: theme.background, borderLeftColor: color },
+        {
+          backgroundColor: palette.card,
+          borderColor: palette.line,
+          borderLeftColor: color,
+        },
       ]}
     >
       <ScaledText type="smallBold" style={{ color }}>
         {SEVERITY_LABEL[alert.severity]}
       </ScaledText>
-      <ScaledText type="smallBold">{alert.title}</ScaledText>
-      <ScaledText type="small" themeColor="textSecondary" numberOfLines={2}>
+      <ScaledText type="smallBold" style={{ color: palette.ink }}>
+        {alert.title}
+      </ScaledText>
+      <ScaledText type="small" style={{ color: palette.muted }} numberOfLines={2}>
         {alert.body}
       </ScaledText>
     </View>
@@ -44,6 +50,7 @@ export function AlertBanner({ alert }: { alert: SafetyAlert }) {
 const styles = StyleSheet.create({
   banner: {
     borderLeftWidth: 6,
+    borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 12,
     paddingVertical: Spacing.two,
     paddingHorizontal: Spacing.three,
