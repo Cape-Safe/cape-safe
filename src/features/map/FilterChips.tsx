@@ -7,8 +7,6 @@ import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
 
-import { NAVY } from "./mapTheme";
-
 export type FilterKey = "police" | "zones" | "alerts";
 
 export type Filters = Record<FilterKey, boolean>;
@@ -45,14 +43,14 @@ export function FilterChips({ filters, onToggle }: Props) {
             style={[
               styles.chip,
               {
-                backgroundColor: on ? NAVY : theme.background,
-                borderColor: on ? NAVY : theme.backgroundSelected,
+                backgroundColor: on ? theme.primary : theme.background,
+                borderColor: on ? theme.primary : theme.backgroundSelected,
               },
             ]}
           >
             <ScaledText
               type="smallBold"
-              style={{ color: on ? "#FFFFFF" : theme.text }}
+              style={{ color: on ? theme.onPrimary : theme.text }}
             >
               {on ? `${label}: on` : `${label}: off`}
             </ScaledText>

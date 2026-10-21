@@ -14,7 +14,7 @@ import { AlertBanner } from "./AlertBanner";
 import { AreaSheet } from "./AreaSheet";
 import { FilterChips, type FilterKey, type Filters } from "./FilterChips";
 import type { Station } from "./mapRisk";
-import { ACCENT, CARD_SHADOW, MAP_BOTTOM_INSET, NAVY } from "./mapTheme";
+import { CARD_SHADOW, MAP_BOTTOM_INSET } from "./mapTheme";
 
 type Props = {
   alert: SafetyAlert | null;
@@ -47,7 +47,10 @@ export function MapOverlay({
       </View>
 
       <View
-        style={[styles.bottom, { paddingBottom: MAP_BOTTOM_INSET + Spacing.three }]}
+        style={[
+          styles.bottom,
+          { paddingBottom: MAP_BOTTOM_INSET + Spacing.three },
+        ]}
         pointerEvents="box-none"
       >
         {!selected && (
@@ -57,9 +60,9 @@ export function MapOverlay({
               accessibilityRole="button"
               accessibilityLabel="Show nearest police station"
               accessibilityState={{ selected: helpActive }}
-              style={[styles.pill, { backgroundColor: NAVY }]}
+              style={[styles.pill, { backgroundColor: theme.primary }]}
             >
-              <ScaledText type="smallBold" style={styles.whiteText}>
+              <ScaledText type="smallBold" style={{ color: theme.onPrimary }}>
                 {helpActive ? "Hide nearest help" : "Nearest help"}
               </ScaledText>
             </Pressable>
@@ -67,7 +70,13 @@ export function MapOverlay({
               onPress={onLocate}
               accessibilityRole="button"
               accessibilityLabel="Centre map on my location"
-              style={[styles.locate, { backgroundColor: theme.background, borderColor: ACCENT }]}
+              style={[
+                styles.locate,
+                {
+                  backgroundColor: theme.background,
+                  borderColor: theme.primary,
+                },
+              ]}
             >
               <ScaledText type="smallBold">Me</ScaledText>
             </Pressable>
