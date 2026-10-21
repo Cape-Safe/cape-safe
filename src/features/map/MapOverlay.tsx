@@ -8,10 +8,12 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
-import type { SafetyAlert } from "@/types";
-
+import { useState } from "react";
 import { AlertBanner } from "./AlertBanner";
 import { AreaSheet } from "./AreaSheet";
+import type { PlaceSuggestion, SafetyAlert } from "@/types";
+import { SearchBar } from "./SearchBar";
+import type { MapSearch } from "./useMapSearch";
 import { FilterChips, type FilterKey, type Filters } from "./FilterChips";
 import type { Station } from "./mapRisk";
 import { CARD_SHADOW, MAP_BOTTOM_INSET } from "./mapTheme";
@@ -25,6 +27,8 @@ type Props = {
   helpActive: boolean;
   onNearestHelp: () => void;
   onLocate: () => void;
+  search: MapSearch;
+  onChooseSuggestion: (item: PlaceSuggestion) => void;
 };
 
 export function MapOverlay({
@@ -36,14 +40,27 @@ export function MapOverlay({
   helpActive,
   onNearestHelp,
   onLocate,
+  search,
+  onChooseSuggestion,
 }: Props) {
   const theme = useTheme();
+  const [searchFocused, setSearchFocused] = useState(false);
 
   return (
     <View style={styles.fill} pointerEvents="box-none">
       <View style={styles.top} pointerEvents="box-none">
-        {filters.alerts && alert && <AlertBanner alert={alert} />}
-        <FilterChips filters={filters} onToggle={onToggleFilter} />
+        <SearchBar
+          search={search}
+          focused={searchFocused}
+          onFocusChange={setSearchFocused}
+          onChoose={onChooseSuggestion}
+        />
+        {!searchFocused && filters.alerts && alert && (
+          <AlertBanner alert={alert} />
+        )}
+        {!searchFocused && (
+          <FilterChips filters={filters} onToggle={onToggleFilter} />
+        )}
       </View>
 
       <View

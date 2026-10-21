@@ -78,3 +78,16 @@ export type SafetyAlert = {
   expiresAt: Timestamp;
   createdAt: Timestamp;
 };
+
+export type PlaceSuggestion = {
+  placeId: string;
+  primaryText: string;
+  secondaryText: string;
+};
+
+export type PlaceDetails = {
+  placeId: string;
+  name: string;
+  address: string;
+  coordinates: Coordinates;
+};

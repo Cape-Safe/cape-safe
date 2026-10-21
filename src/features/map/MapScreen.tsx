@@ -8,6 +8,8 @@ import { useGroup } from "@/hooks/use-group";
 import { useMyProfile } from "@/hooks/use-my-profile";
 import { useNow } from "@/hooks/use-now";
 
+import type { PlaceDetails, PlaceSuggestion } from "@/types";
+import { useMapSearch } from "./useMapSearch";
 import { buildHeatmapCircles } from "./Heatmap";
 import { getSuburbHeatmapPoints } from "./suburbHeatmapPoints";
 import { getCapeTownCrimeHeatmapPoints } from "./crimeRiskScore";
@@ -24,6 +26,8 @@ import {
 import { ROUTE_COLOR, STATION_COLOR } from "./mapTheme";
 import { MapOverlay } from "./MapOverlay";
 import { useActiveAlert } from "./useActiveAlert";
+
+const DESTINATION_ID = "search-destination";
 
 // Starting view is central Cape Town. The camera moves to the user once their location is known.
 const cameraPosition = {
@@ -96,6 +100,28 @@ export default function MapScreen() {
     [stations, origin],
   );
 
+  const search = useMapSearch(origin);
+  const [place, setPlace] = useState<PlaceDetails | null>(null);
+
+  const handleChooseSuggestion = async (item: PlaceSuggestion) => {
+    const details = await search.choose(item);
+    if (!details) return;
+    setPlace(details);
+    setSelectedId(null);
+    setHelpActive(false);
+    moveCamera(details.coordinates, 15);
+  };
+
+  const destinationMarker = place
+    ? [
+        {
+          id: DESTINATION_ID,
+          coordinates: place.coordinates,
+          title: place.name,
+        },
+      ]
+    : [];
+
   const toggleFilter = (key: FilterKey) =>
     setFilters((current) => ({ ...current, [key]: !current[key] }));
 
@@ -121,6 +147,7 @@ export default function MapScreen() {
 
   const handleMarkerClick = (event: { id?: string }) => {
     if (!event.id) return;
+    if (event.id === DESTINATION_ID) return;
     setSelectedId(event.id);
     setHelpActive(false);
   };
@@ -148,6 +175,8 @@ export default function MapScreen() {
       helpActive={helpActive}
       onNearestHelp={handleNearestHelp}
       onLocate={handleLocate}
+      search={search}
+      onChooseSuggestion={handleChooseSuggestion}
     />
   );
 
@@ -171,7 +200,7 @@ export default function MapScreen() {
           properties={{ isMyLocationEnabled: showUserLocation }}
           uiSettings={{ myLocationButtonEnabled: false }}
           circles={circles}
-          markers={[...stationMarkers, ...memberMarkers]}
+          markers={[...stationMarkers, ...memberMarkers, ...destinationMarker]}
           polylines={polylines}
           onMarkerClick={handleMarkerClick}
         />
