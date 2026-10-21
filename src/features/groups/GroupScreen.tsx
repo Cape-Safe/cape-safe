@@ -13,7 +13,7 @@ import { router } from "expo-router";
 
 import { Button, Card, Input } from "@/components/ui/form";
 import { useAuth } from "@/hooks/use-auth";
-import { ThemedText } from "@/components/themed-text";
+import { ScaledText } from "@/features/settings/ScaledText";
 import { ThemedView } from "@/components/themed-view";
 import { BottomTabInset, Spacing } from "@/constants/theme";
 import { useGroup } from "@/hooks/use-group";
@@ -35,11 +35,11 @@ export default function GroupScreen() {
   if (!authLoading && !isLoggedIn) {
     return (
       <ThemedView style={styles.gate}>
-        <ThemedText type="title">Groups</ThemedText>
-        <ThemedText>
+        <ScaledText type="subtitle">Groups</ScaledText>
+        <ScaledText>
           Sign in to create or join a group and share your live location with
           friends.
-        </ThemedText>
+        </ScaledText>
         <Button
           label="Sign in or register"
           onPress={() => router.navigate("/settings/login")}
@@ -51,7 +51,7 @@ export default function GroupScreen() {
   if (loading || !uid) {
     return (
       <ThemedView style={styles.centered}>
-        <ThemedText>Loading…</ThemedText>
+        <ScaledText>Loading…</ScaledText>
       </ThemedView>
     );
   }
@@ -60,7 +60,7 @@ export default function GroupScreen() {
     <ThemedView style={styles.screen}>
       <SafeAreaView edges={["top"]} style={styles.screen}>
         <ScrollView contentContainerStyle={styles.content}>
-          <ThemedText type="title">Group</ThemedText>
+          <ScaledText type="subtitle">Group</ScaledText>
           {groupCode ? (
             <GroupDetails
               uid={uid}
@@ -106,12 +106,12 @@ function NoGroup({ uid, savedName }: { uid: string; savedName: string }) {
   return (
     <>
       <Card>
-        <ThemedText type="smallBold">Your name</ThemedText>
+        <ScaledText type="smallBold">Your name</ScaledText>
         <Input value={name} onChangeText={setName} placeholder="e.g. Sam" />
       </Card>
 
       <Card>
-        <ThemedText type="subtitle">Start a group</ThemedText>
+        <ScaledText type="heading">Start a group</ScaledText>
         <Input
           value={groupName}
           onChangeText={setGroupName}
@@ -127,7 +127,7 @@ function NoGroup({ uid, savedName }: { uid: string; savedName: string }) {
       </Card>
 
       <Card>
-        <ThemedText type="subtitle">Join a group</ThemedText>
+        <ScaledText type="heading">Join a group</ScaledText>
         <Input
           value={code}
           onChangeText={(text) => setCode(text.toUpperCase())}
@@ -180,13 +180,13 @@ function GroupDetails({
   return (
     <>
       <Card>
-        <ThemedText type="subtitle">{group?.name ?? "Your group"}</ThemedText>
-        <ThemedText themeColor="textSecondary">
+        <ScaledText type="heading">{group?.name ?? "Your group"}</ScaledText>
+        <ScaledText themeColor="textSecondary">
           {group?.memberIds.length ?? 1} member(s) · invite code
-        </ThemedText>
-        <ThemedText type="title" style={styles.code}>
+        </ScaledText>
+        <ScaledText type="subtitle" style={styles.code}>
           {code}
-        </ThemedText>
+        </ScaledText>
         <Button
           label="Share invite code"
           onPress={() =>
@@ -200,10 +200,10 @@ function GroupDetails({
       <Card>
         <View style={styles.row}>
           <View style={styles.rowText}>
-            <ThemedText type="smallBold">Share my location</ThemedText>
-            <ThemedText type="small" themeColor="textSecondary">
+            <ScaledText type="smallBold">Share my location</ScaledText>
+            <ScaledText type="small" themeColor="textSecondary">
               Only while the app is open
-            </ThemedText>
+            </ScaledText>
           </View>
           <Switch
             value={sharing}
@@ -217,27 +217,27 @@ function GroupDetails({
       </Card>
 
       <Card>
-        <ThemedText type="smallBold">Sharing now</ThemedText>
+        <ScaledText type="smallBold">Sharing now</ScaledText>
         {sharingNow.length === 0 ? (
-          <ThemedText type="small" themeColor="textSecondary">
+          <ScaledText type="small" themeColor="textSecondary">
             Nobody is sharing their location right now.
-          </ThemedText>
+          </ScaledText>
         ) : (
           sharingNow.map((l) => (
             <View key={l.uid} style={styles.row}>
-              <ThemedText>
+              <ScaledText>
                 {l.uid === uid ? `${l.displayName} (you)` : l.displayName}
-              </ThemedText>
-              <ThemedText type="small" themeColor="textSecondary">
+              </ScaledText>
+              <ScaledText type="small" themeColor="textSecondary">
                 {lastSeenLabel(l, now)}
-              </ThemedText>
+              </ScaledText>
             </View>
           ))
         )}
       </Card>
 
       <Pressable onPress={confirmLeave} style={styles.leave}>
-        <ThemedText style={styles.leaveText}>Leave group</ThemedText>
+        <ScaledText style={styles.leaveText}>Leave group</ScaledText>
       </Pressable>
     </>
   );

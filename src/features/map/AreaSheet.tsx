@@ -9,11 +9,7 @@ import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
 
-import {
-  riskLabel,
-  riskLevel,
-  type Station,
-} from "./mapRisk";
+import { riskLabel, riskLevel, type Station } from "./mapRisk";
 import { CARD_SHADOW, NAVY, RISK_COLORS } from "./mapTheme";
 
 const SEGMENTS = 5;
@@ -56,7 +52,10 @@ export function AreaSheet({ station, onClose }: Props) {
           onPress={onClose}
           accessibilityRole="button"
           accessibilityLabel="Close area details"
-          style={[styles.closeButton, { backgroundColor: theme.backgroundElement }]}
+          style={[
+            styles.closeButton,
+            { backgroundColor: theme.backgroundElement },
+          ]}
         >
           <ScaledText type="smallBold">Close</ScaledText>
         </Pressable>
@@ -73,13 +72,19 @@ export function AreaSheet({ station, onClose }: Props) {
           </ScaledText>
         </View>
         <ScaledText type="smallBold">{score} / 100</ScaledText>
-        <View style={styles.meter} importantForAccessibility="no-hide-descendants">
+        <View
+          style={styles.meter}
+          importantForAccessibility="no-hide-descendants"
+        >
           {Array.from({ length: SEGMENTS }).map((_, i) => (
             <View
               key={i}
               style={[
                 styles.segment,
-                { backgroundColor: i < filled ? colors.fg : theme.backgroundSelected },
+                {
+                  backgroundColor:
+                    i < filled ? colors.fg : theme.backgroundSelected,
+                },
               ]}
             />
           ))}
@@ -101,7 +106,7 @@ export function AreaSheet({ station, onClose }: Props) {
           onPress={() => openDirections(station)}
           accessibilityRole="button"
           accessibilityLabel={`Get directions to ${station.name} police station`}
-          style={[styles.action, { backgroundColor: NAVY }]}
+          style={[styles.action, { backgroundColor: theme.primary }]}
         >
           <ScaledText type="smallBold" style={styles.whiteText}>
             Directions
@@ -130,8 +135,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  riskRow: { flexDirection: "row", alignItems: "center", gap: Spacing.two, flexWrap: "wrap" },
-  badge: { paddingHorizontal: Spacing.two, paddingVertical: Spacing.one, borderRadius: 12 },
+  riskRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.two,
+    flexWrap: "wrap",
+  },
+  badge: {
+    paddingHorizontal: Spacing.two,
+    paddingVertical: Spacing.one,
+    borderRadius: 12,
+  },
   meter: { flexDirection: "row", gap: Spacing.one, flex: 1, minWidth: 80 },
   segment: { flex: 1, height: 8, borderRadius: 4 },
   actions: { flexDirection: "row", gap: Spacing.two },

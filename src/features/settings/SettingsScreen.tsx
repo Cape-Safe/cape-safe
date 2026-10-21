@@ -23,11 +23,11 @@ import { updateProfile } from "@/services/users";
 import type { UserSettings } from "@/types";
 
 import { ScaledText } from "./ScaledText";
+import { Card } from "@/components/ui/form";
 import { setLargeText, useAccessibility } from "./accessibility";
 
 // Accent colours that are not in src/constants/theme.ts yet.
 // TODO: move these into the theme once the team picks a palette.
-const ACCENT = "#1DB2F5";
 const DANGER = "#C0392B";
 
 type CurrentUser = {
@@ -90,7 +90,7 @@ function SettingsRow({
         <Switch
           value={value}
           onValueChange={onValueChange}
-          trackColor={{ false: theme.backgroundSelected, true: ACCENT }}
+          trackColor={{ false: theme.backgroundSelected, true: theme.primary }}
           thumbColor="#FFFFFF"
         />
       ) : onPress ? (
@@ -118,9 +118,7 @@ function SettingsSection({
       >
         {title}
       </ScaledText>
-      <ThemedView type="backgroundElement" style={styles.sectionCard}>
-        {children}
-      </ThemedView>
+      <Card style={styles.sectionCard}>{children}</Card>
     </View>
   );
 }
@@ -233,12 +231,21 @@ export default function SettingsScreen({
           Settings
         </ScaledText>
 
-        <ThemedView type="backgroundElement" style={styles.accountCard}>
+        <Card style={styles.accountCard}>
           {user.avatarUrl ? (
             <Image source={{ uri: user.avatarUrl }} style={styles.avatar} />
           ) : (
-            <View style={[styles.avatar, styles.avatarFallback]}>
-              <ScaledText type="smallBold" style={styles.avatarFallbackText}>
+            <View
+              style={[
+                styles.avatar,
+                styles.avatarFallback,
+                { backgroundColor: theme.primary },
+              ]}
+            >
+              <ScaledText
+                type="smallBold"
+                style={[styles.avatarFallbackText, { color: theme.onPrimary }]}
+              >
                 {initials}
               </ScaledText>
             </View>
@@ -249,7 +256,7 @@ export default function SettingsScreen({
               {user.email}
             </ScaledText>
           </View>
-        </ThemedView>
+        </Card>
 
         <SettingsSection title="Account">
           {isLoggedIn ? (
@@ -327,11 +334,11 @@ export default function SettingsScreen({
 
         {isLoggedIn ? (
           <Pressable onPress={onLogOut}>
-            <ThemedView type="backgroundElement" style={styles.logOutButton}>
+            <Card style={styles.logOutButton}>
               <ScaledText type="smallBold" style={{ color: DANGER }}>
                 Log out
               </ScaledText>
-            </ThemedView>
+            </Card>
           </Pressable>
         ) : null}
       </ThemedView>
@@ -353,17 +360,15 @@ const styles = StyleSheet.create({
   accountCard: {
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: Spacing.three,
-    padding: Spacing.three,
+    gap: 0, // the text already has marginLeft
     marginBottom: Spacing.four,
   },
   avatar: { width: 56, height: 56, borderRadius: 28 },
   avatarFallback: {
-    backgroundColor: ACCENT,
     alignItems: "center",
     justifyContent: "center",
   },
-  avatarFallbackText: { color: "#FFFFFF", fontSize: 18 },
+  avatarFallbackText: { fontSize: 18 },
   accountTextWrap: { marginLeft: Spacing.three, flexShrink: 1 },
 
   section: { marginBottom: Spacing.four },
@@ -373,7 +378,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.two,
     marginLeft: Spacing.one,
   },
-  sectionCard: { borderRadius: Spacing.three, overflow: "hidden" },
+  sectionCard: { padding: 0, gap: 0, overflow: "hidden" },
 
   row: {
     flexDirection: "row",
@@ -388,7 +393,6 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.6 },
 
   logOutButton: {
-    borderRadius: Spacing.three,
     paddingVertical: Spacing.three,
     alignItems: "center",
     marginBottom: Spacing.four,

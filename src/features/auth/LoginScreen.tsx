@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Redirect } from "expo-router";
-import { ThemedText } from "@/components/themed-text";
+import { ScaledText } from "@/features/settings/ScaledText";
 import { ThemedView } from "@/components/themed-view";
 import { Button, Card, Input } from "@/components/ui/form";
 import { BottomTabInset, Spacing } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
+import { useTheme } from "@/hooks/use-theme";
 import {
   authErrorMessage,
   logIn,
@@ -20,7 +21,7 @@ export default function LoginScreen() {
   if (loading) {
     return (
       <ThemedView style={styles.centered}>
-        <ThemedText>Loading…</ThemedText>
+        <ScaledText>Loading…</ScaledText>
       </ThemedView>
     );
   }
@@ -97,12 +98,12 @@ function AuthForm() {
 
   return (
     <>
-      <ThemedText type="title">
+      <ScaledText type="subtitle">
         {registering ? "Create account" : "Sign in"}
-      </ThemedText>
-      <ThemedText>
+      </ScaledText>
+      <ScaledText>
         Sign in to create or join a group and share your location.
-      </ThemedText>
+      </ScaledText>
 
       <Card>
         {registering && (
@@ -162,9 +163,12 @@ function AuthForm() {
 }
 
 function TextLink({ label, onPress }: { label: string; onPress: () => void }) {
+  const theme = useTheme();
   return (
     <Pressable onPress={onPress} style={styles.link}>
-      <ThemedText type="linkPrimary">{label}</ThemedText>
+      <ScaledText type="smallBold" style={{ color: theme.primary }}>
+        {label}
+      </ScaledText>
     </Pressable>
   );
 }
