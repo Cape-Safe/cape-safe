@@ -1,8 +1,9 @@
 // MapOverlay.tsx
-// Everything drawn on top of the map: alert banner, filter chips, the
-// "Nearest help" and locate buttons, and the area sheet. It holds no map
+// Everything drawn on top of the map: search bar, alert banner, filter chips,
+// the "Nearest help" and locate buttons, and the area sheet. It holds no map
 // logic. MapScreen owns the state and passes it in.
 
+import { useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -11,13 +12,15 @@ import { usePalette } from "@/constants/design";
 import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
-import type { SafetyAlert } from "@/types";
+import type { PlaceSuggestion, SafetyAlert } from "@/types";
 
 import { AlertBanner } from "./AlertBanner";
 import { AreaSheet } from "./AreaSheet";
 import { FilterChips, type FilterKey, type Filters } from "./FilterChips";
 import type { Station } from "./mapRisk";
 import { CARD_SHADOW, MAP_BOTTOM_INSET } from "./mapTheme";
+import { SearchBar } from "./SearchBar";
+import type { MapSearch } from "./useMapSearch";
 
 // Android draws its own zoom buttons in the bottom right corner, so the
 // locate button sits above them.
@@ -32,6 +35,8 @@ type Props = {
   helpActive: boolean;
   onNearestHelp: () => void;
   onLocate: () => void;
+  search: MapSearch;
+  onChooseSuggestion: (item: PlaceSuggestion) => void;
 };
 
 export function MapOverlay({
@@ -43,10 +48,13 @@ export function MapOverlay({
   helpActive,
   onNearestHelp,
   onLocate,
+  search,
+  onChooseSuggestion,
 }: Props) {
   const theme = useTheme();
   const palette = usePalette();
   const insets = useSafeAreaInsets();
+  const [searchFocused, setSearchFocused] = useState(false);
 
   return (
     <View style={styles.fill} pointerEvents="box-none">
@@ -54,8 +62,19 @@ export function MapOverlay({
         style={[styles.top, { paddingTop: insets.top + Spacing.two }]}
         pointerEvents="box-none"
       >
-        {filters.alerts && alert && <AlertBanner alert={alert} />}
-        <FilterChips filters={filters} onToggle={onToggleFilter} />
+        <SearchBar
+          search={search}
+          focused={searchFocused}
+          onFocusChange={setSearchFocused}
+          onChoose={onChooseSuggestion}
+        />
+        {/* Hidden while searching so the suggestions never overlap them. */}
+        {!searchFocused && filters.alerts && alert && (
+          <AlertBanner alert={alert} />
+        )}
+        {!searchFocused && (
+          <FilterChips filters={filters} onToggle={onToggleFilter} />
+        )}
       </View>
 
       <View
