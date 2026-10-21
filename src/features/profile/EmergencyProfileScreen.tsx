@@ -98,8 +98,8 @@ function ConsentCard({ uid }: { uid: string }) {
     <Card>
       <ScaledText type="heading" accessibilityRole="header">Before you start</ScaledText>
       <ScaledText>
-        This page can store sensitive details: your ID or passport number, medical information,
-        insurance and next of kin, plus photos or PDFs of your documents.
+        Store your emergency documents (ID, insurance, medical aid etc) for easy access and safe
+        keeping.
       </ScaledText>
       <ScaledText>
         Why: so you and the people helping you can find this quickly in an emergency.
