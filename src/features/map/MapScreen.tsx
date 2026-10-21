@@ -9,6 +9,7 @@ import { useMyProfile } from "@/hooks/use-my-profile";
 import { useNow } from "@/hooks/use-now";
 
 import { buildHeatmapCircles } from "./Heatmap";
+import { getSuburbHeatmapPoints } from "./suburbHeatmapPoints";
 import { getCapeTownCrimeHeatmapPoints } from "./crimeRiskScore";
 import type { FilterKey, Filters } from "./FilterChips";
 import {
@@ -35,7 +36,8 @@ export default function MapScreen() {
   const showUserLocation = permission?.granted ?? false;
   // Built once from the bundled SAPS crime data.
   const crimeHeatmapCircles = useMemo(
-    () => buildHeatmapCircles(getCapeTownCrimeHeatmapPoints()),
+    () => buildHeatmapCircles(getSuburbHeatmapPoints()),
+
     [],
   );
 

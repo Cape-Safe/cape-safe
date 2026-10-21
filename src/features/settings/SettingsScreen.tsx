@@ -1,7 +1,5 @@
 // SettingsScreen.tsx
 // Settings screen for Cape Safe. The toggles are saved to the signed-in
-// user's Firestore profile (users/{uid}.settings). Edit profile and Change
-// password still need real accounts, so they show "coming soon".
 
 import { useEffect, useState, type ReactNode } from "react";
 import {
