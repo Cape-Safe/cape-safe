@@ -1,34 +1,23 @@
 // SettingsScreen.tsx
 // Settings screen for Cape Safe. The toggles are saved to the signed-in
+// user's Firestore profile (users/{uid}.settings).
 
+import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { useEffect, useState, type ReactNode } from "react";
-import {
-  Alert,
-  Image,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  View,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Alert, Image, StyleSheet, Switch, View } from "react-native";
 
-import { ThemedView } from "@/components/themed-view";
-import { BottomTabInset, MaxContentWidth, Spacing } from "@/constants/theme";
-import { useMyProfile } from "@/hooks/use-my-profile";
+import { PressableScale } from "@/components/design/PressableScale";
+import { ScreenScaffold } from "@/components/design/ScreenScaffold";
+import { Button, Card } from "@/components/ui/form";
+import { usePalette } from "@/constants/design";
+import { Spacing } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
-import { useTheme } from "@/hooks/use-theme";
+import { useMyProfile } from "@/hooks/use-my-profile";
 import { updateProfile } from "@/services/users";
 import type { UserSettings } from "@/types";
 
 import { ScaledText } from "./ScaledText";
-import { Card } from "@/components/ui/form";
 import { setLargeText, useAccessibility } from "./accessibility";
-
-// Accent colours that are not in src/constants/theme.ts yet.
-// TODO: move these into the theme once the team picks a palette.
-const DANGER = "#C0392B";
 
 type CurrentUser = {
   name: string;
@@ -49,56 +38,96 @@ const DEFAULT_SETTINGS: UserSettings = {
   colourBlindMode: false,
 };
 
+const ICONS = {
+  edit: { ios: "pencil", android: "edit", web: "edit" },
+  key: { ios: "key.fill", android: "key", web: "key" },
+  bell: { ios: "bell.fill", android: "notifications", web: "notifications" },
+  pin: { ios: "location.fill", android: "location_on", web: "location_on" },
+  text: { ios: "textformat.size", android: "text_fields", web: "text_fields" },
+  eye: { ios: "eye.fill", android: "visibility", web: "visibility" },
+  lock: { ios: "lock.fill", android: "lock", web: "lock" },
+  doc: { ios: "doc.text.fill", android: "description", web: "description" },
+  info: { ios: "info.circle.fill", android: "info", web: "info" },
+} as const satisfies Record<string, SymbolViewProps["name"]>;
+
+type IconKey = keyof typeof ICONS;
+
 type SettingsRowProps = {
+  icon: IconKey;
   label: string;
   description?: string;
   value?: boolean;
   onValueChange?: (next: boolean) => void;
   onPress?: () => void;
+  last?: boolean;
 };
 
 function SettingsRow({
+  icon,
   label,
   description,
   value,
   onValueChange,
   onPress,
+  last,
 }: SettingsRowProps) {
-  const theme = useTheme();
+  const palette = usePalette();
   const isToggle = onValueChange !== undefined;
-
-  return (
-    <Pressable
-      style={({ pressed }) => [
-        styles.row,
-        { borderBottomColor: theme.backgroundSelected },
-        pressed && !isToggle && styles.pressed,
-      ]}
-      onPress={onPress}
-      disabled={isToggle && !onPress}
-    >
+  const content = (
+    <>
+      <View style={[styles.icon, { backgroundColor: palette.accentSoft }]}>
+        <SymbolView name={ICONS[icon]} size={20} tintColor={palette.accent} />
+      </View>
       <View style={styles.rowTextWrap}>
-        <ScaledText>{label}</ScaledText>
+        <ScaledText type="smallBold" style={{ color: palette.ink }}>
+          {label}
+        </ScaledText>
         {description ? (
-          <ScaledText type="small" themeColor="textSecondary">
+          <ScaledText type="small" style={{ color: palette.muted }}>
             {description}
           </ScaledText>
         ) : null}
       </View>
-
       {isToggle ? (
         <Switch
           value={value}
           onValueChange={onValueChange}
-          trackColor={{ false: theme.backgroundSelected, true: theme.primary }}
+          trackColor={{ false: palette.line, true: palette.accent }}
           thumbColor="#FFFFFF"
+          accessibilityLabel={label}
         />
       ) : onPress ? (
-        <ScaledText themeColor="textSecondary" style={styles.chevron}>
-          {"›"}
-        </ScaledText>
+        <SymbolView
+          name={{
+            ios: "chevron.right",
+            android: "chevron_right",
+            web: "chevron_right",
+          }}
+          size={16}
+          tintColor={palette.muted}
+        />
       ) : null}
-    </Pressable>
+    </>
+  );
+
+  const rowStyle = [
+    styles.row,
+    !last && {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: palette.line,
+    },
+  ];
+
+  if (!onPress) return <View style={rowStyle}>{content}</View>;
+  return (
+    <PressableScale
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      style={rowStyle}
+    >
+      {content}
+    </PressableScale>
   );
 }
 
@@ -109,14 +138,15 @@ function SettingsSection({
   title: string;
   children: ReactNode;
 }) {
+  const palette = usePalette();
   return (
     <View style={styles.section}>
       <ScaledText
         type="smallBold"
-        themeColor="textSecondary"
-        style={styles.sectionTitle}
+        accessibilityRole="header"
+        style={[styles.sectionTitle, { color: palette.muted }]}
       >
-        {title}
+        {title.toUpperCase()}
       </ScaledText>
       <Card style={styles.sectionCard}>{children}</Card>
     </View>
@@ -150,26 +180,7 @@ export default function SettingsScreen({
   onLogOut,
   onSignIn,
 }: SettingsScreenProps) {
-  const theme = useTheme();
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
-  };
-
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
-
+  const palette = usePalette();
   const { isLoggedIn } = useAuth();
   const { uid, profile } = useMyProfile();
   const { largeText } = useAccessibility();
@@ -220,18 +231,9 @@ export default function SettingsScreen({
     .toUpperCase();
 
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}
-      showsVerticalScrollIndicator={false}
-    >
-      <ThemedView style={styles.container}>
-        <ScaledText type="subtitle" style={styles.screenTitle}>
-          Settings
-        </ScaledText>
-
-        <Card style={styles.accountCard}>
+    <ScreenScaffold eyebrow="Settings" title="Your account">
+      <Card>
+        <View style={styles.accountRow}>
           {user.avatarUrl ? (
             <Image source={{ uri: user.avatarUrl }} style={styles.avatar} />
           ) : (
@@ -239,143 +241,145 @@ export default function SettingsScreen({
               style={[
                 styles.avatar,
                 styles.avatarFallback,
-                { backgroundColor: theme.primary },
+                { backgroundColor: palette.accentSoft },
               ]}
             >
               <ScaledText
                 type="smallBold"
-                style={[styles.avatarFallbackText, { color: theme.onPrimary }]}
+                style={[styles.avatarFallbackText, { color: palette.accent }]}
               >
-                {initials}
+                {initials || "?"}
               </ScaledText>
             </View>
           )}
           <View style={styles.accountTextWrap}>
-            <ScaledText type="smallBold">{user.name}</ScaledText>
-            <ScaledText type="small" themeColor="textSecondary">
+            <ScaledText type="heading" style={{ color: palette.ink }}>
+              {user.name}
+            </ScaledText>
+            <ScaledText type="small" style={{ color: palette.muted }}>
               {user.email}
             </ScaledText>
           </View>
-        </Card>
-
-        <SettingsSection title="Account">
-          {isLoggedIn ? (
-            <>
-              <SettingsRow
-                label="Edit profile"
-                description="Name, email and phone number"
-                // TODO: replace the "coming soon" message with the Profile edit
-                // screen once it exists.
-                onPress={onEditProfile}
-              />
-              <SettingsRow
-                label="Change password"
-                description="We'll email you a reset link"
-                onPress={onChangePassword}
-              />
-            </>
-          ) : (
-            <SettingsRow
-              label="Sign in or register"
-              description="Needed for groups and location sharing"
-              onPress={onSignIn}
-            />
-          )}
-        </SettingsSection>
-
-        <SettingsSection title="Notifications">
-          <SettingsRow
-            label="Push alerts"
-            description="Storm warnings and road closures from admins"
-            value={settings.pushAlerts}
-            // Saved now. Sending push notifications is out of v1 scope (docs/ROADMAP.md).
-            onValueChange={(next) => saveSetting("pushAlerts", next)}
-          />
-        </SettingsSection>
-
-        <SettingsSection title="Location">
-          <SettingsRow
-            label="Share my location by default"
-            description="Applies when you share your location"
-            value={settings.shareLocationByDefault}
-            // Saved now. TODO: use it as the default for the SOS "share location" action.
-            onValueChange={(next) =>
-              saveSetting("shareLocationByDefault", next)
-            }
-          />
-        </SettingsSection>
-
-        <SettingsSection title="Accessibility">
-          <SettingsRow
-            label="Larger text"
-            description="Increases text size across the app"
-            value={largeText}
-            // Saved now. Other screens grow too once ThemedText reads
-            // useAccessibility().textScale (see accessibility.ts).
-            onValueChange={(next) => {
-              setLargeText(next);
-              saveSetting("largeText", next);
-            }}
-          />
-          <SettingsRow
-            label="Colour-blind friendly mode"
-            description="Adjusts the map and risk colours"
-            value={settings.colourBlindMode}
-            // Saved now. TODO: the map and risk colours need to read this before it has any effect.
-            onValueChange={(next) => saveSetting("colourBlindMode", next)}
-          />
-        </SettingsSection>
-
-        <SettingsSection title="About">
-          <SettingsRow label="App version" description="1.0.0" />
-          <SettingsRow label="Privacy policy" onPress={onPrivacyPolicy} />
-          <SettingsRow label="Terms of use" onPress={onTermsOfUse} />
-        </SettingsSection>
-
-        {isLoggedIn ? (
-          <Pressable onPress={onLogOut}>
-            <Card style={styles.logOutButton}>
-              <ScaledText type="smallBold" style={{ color: DANGER }}>
-                Log out
-              </ScaledText>
-            </Card>
-          </Pressable>
+        </View>
+        {!isLoggedIn && onSignIn ? (
+          <Button label="Sign in or register" onPress={onSignIn} />
         ) : null}
-      </ThemedView>
-    </ScrollView>
+      </Card>
+
+      {isLoggedIn ? (
+        <SettingsSection title="Account">
+          <SettingsRow
+            icon="edit"
+            label="Edit profile"
+            description="Name, email and phone number"
+            // TODO: replace the "coming soon" message with the Profile edit
+            // screen once it exists.
+            onPress={onEditProfile}
+          />
+          <SettingsRow
+            icon="key"
+            label="Change password"
+            description="We'll email you a reset link"
+            onPress={onChangePassword}
+            last
+          />
+        </SettingsSection>
+      ) : null}
+
+      <SettingsSection title="Notifications">
+        <SettingsRow
+          icon="bell"
+          label="Push alerts"
+          description="Storm warnings and road closures from admins"
+          value={settings.pushAlerts}
+          // Saved now. Sending push notifications is out of v1 scope (docs/ROADMAP.md).
+          onValueChange={(next) => saveSetting("pushAlerts", next)}
+          last
+        />
+      </SettingsSection>
+
+      <SettingsSection title="Location">
+        <SettingsRow
+          icon="pin"
+          label="Share my location by default"
+          description="Applies when you share your location"
+          value={settings.shareLocationByDefault}
+          // Saved now. TODO: use it as the default for the SOS "share location" action.
+          onValueChange={(next) => saveSetting("shareLocationByDefault", next)}
+          last
+        />
+      </SettingsSection>
+
+      <SettingsSection title="Accessibility">
+        <SettingsRow
+          icon="text"
+          label="Larger text"
+          description="Increases text size across the app"
+          value={largeText}
+          // Saved now. Other screens grow too once ThemedText reads
+          // useAccessibility().textScale (see accessibility.ts).
+          onValueChange={(next) => {
+            setLargeText(next);
+            saveSetting("largeText", next);
+          }}
+        />
+        <SettingsRow
+          icon="eye"
+          label="Colour-blind friendly mode"
+          description="Adjusts the map and risk colours"
+          value={settings.colourBlindMode}
+          // Saved now. TODO: the map and risk colours need to read this before it has any effect.
+          onValueChange={(next) => saveSetting("colourBlindMode", next)}
+          last
+        />
+      </SettingsSection>
+
+      <SettingsSection title="About">
+        <SettingsRow icon="info" label="App version" description="1.0.0" />
+        <SettingsRow
+          icon="lock"
+          label="Privacy policy"
+          onPress={onPrivacyPolicy}
+        />
+        <SettingsRow
+          icon="doc"
+          label="Terms of use"
+          onPress={onTermsOfUse}
+          last
+        />
+      </SettingsSection>
+
+      {isLoggedIn ? (
+        <PressableScale
+          onPress={onLogOut}
+          accessibilityRole="button"
+          accessibilityLabel="Log out"
+        >
+          <Card style={styles.logOutButton}>
+            <ScaledText type="smallBold" style={{ color: palette.danger }}>
+              Log out
+            </ScaledText>
+          </Card>
+        </PressableScale>
+      ) : null}
+    </ScreenScaffold>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: { flex: 1 },
-  contentContainer: { alignItems: "center" },
-  container: {
-    width: "100%",
-    maxWidth: MaxContentWidth,
-    paddingHorizontal: Spacing.three,
-    paddingTop: Spacing.three,
-  },
-  screenTitle: { marginBottom: Spacing.three },
-
-  accountCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 0, // the text already has marginLeft
-    marginBottom: Spacing.four,
-  },
+  accountRow: { flexDirection: "row", alignItems: "center", gap: Spacing.three },
   avatar: { width: 56, height: 56, borderRadius: 28 },
   avatarFallback: {
     alignItems: "center",
     justifyContent: "center",
   },
   avatarFallbackText: { fontSize: 18 },
-  accountTextWrap: { marginLeft: Spacing.three, flexShrink: 1 },
+  accountTextWrap: { flexShrink: 1 },
 
-  section: { marginBottom: Spacing.four },
+  section: { gap: Spacing.two },
   sectionTitle: {
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-    marginBottom: Spacing.two,
+    letterSpacing: 1.6,
+    fontSize: 11,
     marginLeft: Spacing.one,
   },
   sectionCard: { padding: 0, gap: 0, overflow: "hidden" },
@@ -383,18 +387,22 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: Spacing.three,
+    gap: Spacing.three,
+    minHeight: 64,
+    paddingVertical: Spacing.two,
     paddingHorizontal: Spacing.three,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  rowTextWrap: { flexShrink: 1, paddingRight: Spacing.three },
-  chevron: { fontSize: 20 },
-  pressed: { opacity: 0.6 },
+  icon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  rowTextWrap: { flex: 1 },
 
   logOutButton: {
     paddingVertical: Spacing.three,
     alignItems: "center",
-    marginBottom: Spacing.four,
   },
 });

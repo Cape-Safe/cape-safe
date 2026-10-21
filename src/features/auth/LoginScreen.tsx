@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Alert, StyleSheet } from "react-native";
 import { Redirect } from "expo-router";
 import { ScaledText } from "@/features/settings/ScaledText";
+import { PressableScale } from "@/components/design/PressableScale";
+import { ScreenScaffold } from "@/components/design/ScreenScaffold";
 import { ThemedView } from "@/components/themed-view";
 import { Button, Card, Input } from "@/components/ui/form";
-import { BottomTabInset, Spacing } from "@/constants/theme";
+import { usePalette } from "@/constants/design";
+import { Spacing } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
-import { useTheme } from "@/hooks/use-theme";
 import {
   authErrorMessage,
   logIn,
@@ -28,18 +29,7 @@ export default function LoginScreen() {
 
   if (isLoggedIn) return <Redirect href="/settings" />;
 
-  return (
-    <ThemedView style={styles.screen}>
-      <SafeAreaView edges={["top"]} style={styles.screen}>
-        <ScrollView
-          contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled"
-        >
-          <AuthForm />
-        </ScrollView>
-      </SafeAreaView>
-    </ThemedView>
-  );
+  return <AuthForm />;
 }
 
 function AuthForm() {
@@ -97,14 +87,11 @@ function AuthForm() {
   }
 
   return (
-    <>
-      <ScaledText type="subtitle">
-        {registering ? "Create account" : "Sign in"}
-      </ScaledText>
-      <ScaledText>
-        Sign in to create or join a group and share your location.
-      </ScaledText>
-
+    <ScreenScaffold
+      eyebrow="Welcome"
+      title={registering ? "Create account" : "Sign in"}
+      lede="Sign in to create or join a group and share your location."
+    >
       <Card>
         {registering && (
           <Input
@@ -158,28 +145,31 @@ function AuthForm() {
         }
         onPress={() => setRegistering(!registering)}
       />
-    </>
+    </ScreenScaffold>
   );
 }
 
 function TextLink({ label, onPress }: { label: string; onPress: () => void }) {
-  const theme = useTheme();
+  const palette = usePalette();
   return (
-    <Pressable onPress={onPress} style={styles.link}>
-      <ScaledText type="smallBold" style={{ color: theme.primary }}>
+    <PressableScale
+      onPress={onPress}
+      accessibilityRole="button"
+      style={styles.link}
+    >
+      <ScaledText type="smallBold" style={{ color: palette.accent }}>
         {label}
       </ScaledText>
-    </Pressable>
+    </PressableScale>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1 },
   centered: { flex: 1, alignItems: "center", justifyContent: "center" },
-  content: {
-    padding: Spacing.four,
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.four,
+  link: {
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 44,
+    padding: Spacing.two,
   },
-  link: { alignItems: "center", padding: Spacing.two },
 });

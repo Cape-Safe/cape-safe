@@ -3,14 +3,16 @@
 // area's risk level (never by colour alone) and score, plus quick actions to
 // call SAPS or get directions. Raw crime counts are left out on purpose.
 
-import { Linking, Platform, Pressable, StyleSheet, View } from "react-native";
+import { Linking, Platform, StyleSheet, View } from "react-native";
 
+import { PressableScale } from "@/components/design/PressableScale";
+import { usePalette } from "@/constants/design";
 import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
 
 import { riskLabel, riskLevel, type Station } from "./mapRisk";
-import { CARD_SHADOW, NAVY, RISK_COLORS } from "./mapTheme";
+import { CARD_SHADOW, RISK_COLORS } from "./mapTheme";
 
 const SEGMENTS = 5;
 
@@ -34,31 +36,38 @@ type Props = {
 
 export function AreaSheet({ station, onClose }: Props) {
   const theme = useTheme();
+  const palette = usePalette();
   const level = riskLevel(station.risk);
   const colors = RISK_COLORS[level];
   const score = Math.round(station.risk * 100);
   const filled = Math.max(1, Math.ceil(station.risk * SEGMENTS));
 
   return (
-    <View style={[styles.sheet, { backgroundColor: theme.background }]}>
+    <View
+      style={[
+        styles.sheet,
+        { backgroundColor: palette.card, borderColor: palette.line },
+      ]}
+    >
       <View style={styles.headerRow}>
         <View style={styles.flex}>
-          <ScaledText type="heading">{station.name}</ScaledText>
-          <ScaledText type="small" themeColor="textSecondary">
+          <ScaledText type="heading" style={{ color: palette.ink }}>
+            {station.name}
+          </ScaledText>
+          <ScaledText type="small" style={{ color: palette.muted }}>
             {station.locality}
           </ScaledText>
         </View>
-        <Pressable
+        <PressableScale
           onPress={onClose}
           accessibilityRole="button"
           accessibilityLabel="Close area details"
-          style={[
-            styles.closeButton,
-            { backgroundColor: theme.backgroundElement },
-          ]}
+          style={[styles.closeButton, { backgroundColor: palette.screen }]}
         >
-          <ScaledText type="smallBold">Close</ScaledText>
-        </Pressable>
+          <ScaledText type="smallBold" style={{ color: palette.ink }}>
+            Close
+          </ScaledText>
+        </PressableScale>
       </View>
 
       <View
@@ -71,7 +80,9 @@ export function AreaSheet({ station, onClose }: Props) {
             {riskLabel(level)}
           </ScaledText>
         </View>
-        <ScaledText type="smallBold">{score} / 100</ScaledText>
+        <ScaledText type="smallBold" style={{ color: palette.ink }}>
+          {score} / 100
+        </ScaledText>
         <View
           style={styles.meter}
           importantForAccessibility="no-hide-descendants"
@@ -81,10 +92,7 @@ export function AreaSheet({ station, onClose }: Props) {
               key={i}
               style={[
                 styles.segment,
-                {
-                  backgroundColor:
-                    i < filled ? colors.fg : theme.backgroundSelected,
-                },
+                { backgroundColor: i < filled ? colors.fg : palette.line },
               ]}
             />
           ))}
@@ -92,26 +100,27 @@ export function AreaSheet({ station, onClose }: Props) {
       </View>
 
       <View style={styles.actions}>
-        <Pressable
+        <PressableScale
+          haptic
           onPress={callPolice}
           accessibilityRole="button"
           accessibilityLabel="Call police on 10111"
-          style={[styles.action, styles.callButton]}
+          style={[styles.action, { backgroundColor: palette.danger }]}
         >
           <ScaledText type="smallBold" style={styles.whiteText}>
             Call 10111
           </ScaledText>
-        </Pressable>
-        <Pressable
+        </PressableScale>
+        <PressableScale
           onPress={() => openDirections(station)}
           accessibilityRole="button"
           accessibilityLabel={`Get directions to ${station.name} police station`}
           style={[styles.action, { backgroundColor: theme.primary }]}
         >
-          <ScaledText type="smallBold" style={styles.whiteText}>
+          <ScaledText type="smallBold" style={{ color: theme.onPrimary }}>
             Directions
           </ScaledText>
-        </Pressable>
+        </PressableScale>
       </View>
     </View>
   );
@@ -119,7 +128,8 @@ export function AreaSheet({ station, onClose }: Props) {
 
 const styles = StyleSheet.create({
   sheet: {
-    borderRadius: 20,
+    borderRadius: 16,
+    borderWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.three,
     gap: Spacing.two,
@@ -152,10 +162,9 @@ const styles = StyleSheet.create({
   action: {
     flex: 1,
     minHeight: 48,
-    borderRadius: 24,
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
   },
-  callButton: { backgroundColor: "#C0392B" },
   whiteText: { color: "#FFFFFF" },
 });

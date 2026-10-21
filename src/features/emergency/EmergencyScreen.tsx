@@ -1,27 +1,21 @@
-import { Image } from "expo-image";
 import * as Linking from "expo-linking";
 import { SymbolView } from "expo-symbols";
 import { useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet, View } from "react-native";
 
+import { PressableScale } from "@/components/design/PressableScale";
+import { ScreenScaffold } from "@/components/design/ScreenScaffold";
+import { CardShadow, usePalette } from "@/constants/design";
 import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
-import { useTheme } from "@/hooks/use-theme";
 
-import { LOGO_IMAGE } from "./emergencyAssets";
 import { emergencyServices, type EmergencyService } from "./emergencyServices";
 
+// The two calls that matter most are shown as large buttons.
+const FEATURED_IDS = ["saps", "ambulance"];
+
 export default function EmergencyScreen() {
-  const theme = useTheme();
-  const isDark = useColorScheme() === "dark";
-  const insets = useSafeAreaInsets();
+  const palette = usePalette();
   const [failed, setFailed] = useState<EmergencyService | null>(null);
 
   const callService = async (service: EmergencyService) => {
@@ -33,142 +27,108 @@ export default function EmergencyScreen() {
     }
   };
 
+  const featured = FEATURED_IDS.map((id) =>
+    emergencyServices.find((service) => service.id === id),
+  ).filter((service): service is EmergencyService => !!service);
+  const others = emergencyServices.filter(
+    (service) => !FEATURED_IDS.includes(service.id),
+  );
+
   return (
-    <ScrollView
-      style={{ backgroundColor: theme.background }}
-      contentContainerStyle={[
-        styles.content,
-        { paddingBottom: Spacing.six + insets.bottom },
-      ]}
-      contentInsetAdjustmentBehavior="never"
+    <ScreenScaffold
+      eyebrow="Emergency"
+      title="Get help now"
+      meta={
+        <View style={styles.metaRow}>
+          <View style={[styles.liveDot, { backgroundColor: palette.live }]} />
+          <ScaledText type="small" style={{ color: palette.onDarkMuted }}>
+            Cape Town, Western Cape
+          </ScaledText>
+        </View>
+      }
+      lede="In an emergency, help is just a call away."
     >
-      <View style={[styles.hero, { paddingTop: insets.top + Spacing.three }]}>
-        <View style={styles.topRow}>
-          <View
-            style={styles.logoRow}
-            accessible
-            accessibilityRole="image"
-            accessibilityLabel="Cape Safe"
+      <View style={styles.featuredRow}>
+        {featured.map((service) => (
+          <PressableScale
+            key={service.id}
+            haptic
+            onPress={() => callService(service)}
+            accessibilityRole="button"
+            accessibilityLabel={`Call ${service.a11yName}, ${service.display}`}
+            style={[
+              styles.featured,
+              {
+                backgroundColor:
+                  service.id === "saps" ? palette.danger : palette.medical,
+              },
+            ]}
           >
-            {LOGO_IMAGE ? (
-              <Image
-                source={LOGO_IMAGE}
-                style={styles.logoImage}
-                contentFit="contain"
-              />
-            ) : (
+            <View style={styles.ring}>
               <SymbolView
-                name={{
-                  ios: "shield.lefthalf.filled",
-                  android: "health_and_safety",
-                  web: "health_and_safety",
-                }}
-                size={24}
-                tintColor={theme.text}
+                name={{ ios: "phone.fill", android: "call", web: "call" }}
+                size={20}
+                tintColor="#FFFFFF"
               />
-            )}
+            </View>
             <View>
-              <ScaledText
-                type="smallBold"
-                style={[styles.logoText, { color: theme.text }]}
-              >
-                CAPE SAFE
+              <ScaledText type="smallBold" style={styles.featuredName}>
+                {service.id === "saps" ? "Police (SAPS)" : service.name}
               </ScaledText>
-              <ScaledText
-                type="small"
-                style={[styles.logoSub, { color: theme.textSecondary }]}
-              >
-                CAPE TOWN
+              <ScaledText type="subtitle" style={styles.featuredNumber}>
+                {service.display}
               </ScaledText>
             </View>
-          </View>
-          <View
-            style={[styles.pill, { backgroundColor: theme.backgroundElement }]}
-          >
-            <SymbolView
-              name={{
-                ios: "location.fill",
-                android: "location_on",
-                web: "location_on",
-              }}
-              size={14}
-              tintColor={theme.text}
-            />
-            <ScaledText type="small" style={{ color: theme.text }}>
-              Cape Town
-            </ScaledText>
-          </View>
-        </View>
-
-        <View style={styles.heroText}>
-          <ScaledText
-            type="subtitle"
-            accessibilityRole="header"
-            style={[styles.heroHeading, { color: theme.text }]}
-          >
-            Hi there,
-          </ScaledText>
-          <ScaledText
-            type="default"
-            themeColor="textSecondary"
-            style={styles.heroSubtitle}
-          >
-            In an emergency, help is just a call away.
-          </ScaledText>
-        </View>
+          </PressableScale>
+        ))}
       </View>
+
+      <ScaledText
+        type="smallBold"
+        accessibilityRole="header"
+        style={[styles.sectionLabel, { color: palette.muted }]}
+      >
+        OTHER RESPONDERS
+      </ScaledText>
 
       <View
         style={[
           styles.card,
-          { backgroundColor: isDark ? theme.backgroundElement : "#FFFFFF" },
-          isDark ? styles.cardBorderDark : styles.cardShadow,
+          { backgroundColor: palette.card, borderColor: palette.line },
         ]}
       >
-        <ScaledText
-          type="default"
-          accessibilityRole="header"
-          style={styles.cardTitle}
-        >
-          Emergency Responders
-        </ScaledText>
-
-        {emergencyServices.map((service, index) => (
-          <Pressable
+        {others.map((service, index) => (
+          <PressableScale
             key={service.id}
+            haptic
             onPress={() => callService(service)}
             accessibilityRole="button"
             accessibilityLabel={`Call ${service.a11yName}, ${service.display}`}
-            style={({ pressed }) => [
+            style={[
               styles.row,
               index > 0 && {
                 borderTopWidth: StyleSheet.hairlineWidth,
-                borderTopColor: theme.backgroundSelected,
+                borderTopColor: palette.line,
               },
-              pressed && { backgroundColor: theme.backgroundSelected },
             ]}
           >
-            <View style={[styles.icon, { backgroundColor: service.color }]}>
-              <SymbolView name={service.icon} size={22} tintColor="#FFFFFF" />
+            <View style={[styles.icon, { backgroundColor: palette.accentSoft }]}>
+              <SymbolView name={service.icon} size={20} tintColor={palette.accent} />
             </View>
             <View style={styles.rowText}>
-              <ScaledText type="default" style={styles.serviceName}>
+              <ScaledText type="smallBold" style={{ color: palette.ink }}>
                 {service.name}
               </ScaledText>
-              <ScaledText type="small" themeColor="textSecondary">
+              <ScaledText type="small" style={{ color: palette.muted }}>
                 {service.display}
               </ScaledText>
             </View>
-            <View
-              style={[styles.callButton, { backgroundColor: theme.primary }]}
-            >
-              <SymbolView
-                name={{ ios: "phone.fill", android: "call", web: "call" }}
-                size={18}
-                tintColor={theme.onPrimary}
-              />
-            </View>
-          </Pressable>
+            <SymbolView
+              name={{ ios: "phone", android: "call", web: "call" }}
+              size={18}
+              tintColor={palette.muted}
+            />
+          </PressableScale>
         ))}
 
         {failed && (
@@ -181,96 +141,53 @@ export default function EmergencyScreen() {
         )}
       </View>
 
-      <View
-        style={[
-          styles.location,
-          isDark ? styles.locationDark : styles.locationLight,
-        ]}
-      >
-        <SymbolView
-          name={{
-            ios: "location.fill",
-            android: "location_on",
-            web: "location_on",
-          }}
-          size={20}
-          tintColor={theme.text}
-        />
-        <View>
-          <ScaledText type="default" style={styles.serviceName}>
-            Cape Town
-          </ScaledText>
-          <ScaledText type="small" themeColor="textSecondary">
-            Western Cape
-          </ScaledText>
-        </View>
-      </View>
-
       <ScaledText
         type="smallBold"
-        themeColor="textSecondary"
-        style={styles.tagline}
+        style={[styles.tagline, { color: palette.muted }]}
       >
         Be prepared · Be informed · Be safer
       </ScaledText>
-      <ScaledText
-        type="small"
-        themeColor="textSecondary"
-        style={styles.disclaimer}
-      >
+      <ScaledText type="small" style={[styles.disclaimer, { color: palette.muted }]}>
         Cape Safe does not replace emergency services. Always call 10111 or 112
         in an emergency.
       </ScaledText>
-    </ScrollView>
+    </ScreenScaffold>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { flexGrow: 1 },
-  hero: {
-    paddingHorizontal: Spacing.four,
-    paddingBottom: Spacing.four,
-    gap: Spacing.five,
-  },
-  topRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  logoRow: { flexDirection: "row", alignItems: "center", gap: Spacing.two },
-  logoImage: { width: 28, height: 28 },
-  logoText: { fontWeight: "800", letterSpacing: 1.2, lineHeight: 18 },
-  logoSub: { fontSize: 9, lineHeight: 11, letterSpacing: 1.5 },
-  pill: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: Spacing.one,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-    borderRadius: 999,
-  },
-  heroText: { gap: Spacing.one },
-  heroHeading: { fontWeight: "400" },
-  heroSubtitle: { fontSize: 15, maxWidth: 280 },
-  card: {
-    marginHorizontal: Spacing.three,
-    borderRadius: 28,
+  metaRow: { flexDirection: "row", alignItems: "center", gap: Spacing.two },
+  liveDot: { width: 7, height: 7, borderRadius: 4 },
+  featuredRow: { flexDirection: "row", gap: Spacing.two },
+  featured: {
+    flex: 1,
+    minHeight: 124,
+    borderRadius: 16,
     padding: Spacing.three,
-    maxWidth: 800,
-    alignSelf: "stretch",
+    justifyContent: "space-between",
+    boxShadow: CardShadow,
   },
-  cardShadow: {
-    boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+  ring: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: "rgba(255,255,255,0.18)",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  cardBorderDark: {
+  featuredName: { color: "rgba(255,255,255,0.92)" },
+  featuredNumber: {
+    color: "#FFFFFF",
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: "700",
+  },
+  sectionLabel: { letterSpacing: 1.6, fontSize: 11, marginTop: Spacing.two },
+  card: {
+    borderRadius: 16,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "rgba(255,255,255,0.12)",
-  },
-  cardTitle: {
-    fontWeight: "800",
-    fontSize: 20,
-    marginBottom: Spacing.two,
-    paddingHorizontal: Spacing.one,
+    paddingHorizontal: Spacing.three,
+    boxShadow: CardShadow,
   },
   row: {
     flexDirection: "row",
@@ -278,54 +195,25 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
     minHeight: 64,
     paddingVertical: Spacing.two,
-    paddingHorizontal: Spacing.one,
-    borderRadius: 12,
   },
   icon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
   },
   rowText: { flex: 1 },
-  serviceName: { fontWeight: "700" },
-  callButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   failure: {
-    marginTop: Spacing.two,
+    marginBottom: Spacing.two,
     padding: Spacing.three,
     borderRadius: 12,
     backgroundColor: "rgba(220,38,38,0.12)",
   },
   failureText: { color: "#DC2626" },
-  location: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: Spacing.three,
-    marginHorizontal: Spacing.three,
-    marginTop: Spacing.three,
-    padding: Spacing.three,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  locationLight: {
-    backgroundColor: "rgba(255,255,255,0.7)",
-    borderColor: "rgba(0,0,0,0.06)",
-  },
-  locationDark: {
-    backgroundColor: "rgba(255,255,255,0.08)",
-    borderColor: "rgba(255,255,255,0.14)",
-  },
-  tagline: { textAlign: "center", marginTop: Spacing.four },
+  tagline: { textAlign: "center", marginTop: Spacing.three },
   disclaimer: {
     textAlign: "center",
-    marginTop: Spacing.two,
-    marginHorizontal: Spacing.four,
+    marginHorizontal: Spacing.three,
   },
 });

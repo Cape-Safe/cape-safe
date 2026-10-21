@@ -1,8 +1,10 @@
 // FilterChips.tsx
 // Toggle chips that show or hide things on the map.
 
-import { Pressable, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
+import { PressableScale } from "@/components/design/PressableScale";
+import { usePalette } from "@/constants/design";
 import { Spacing } from "@/constants/theme";
 import { ScaledText } from "@/features/settings/ScaledText";
 import { useTheme } from "@/hooks/use-theme";
@@ -24,6 +26,7 @@ type Props = {
 
 export function FilterChips({ filters, onToggle }: Props) {
   const theme = useTheme();
+  const palette = usePalette();
 
   return (
     <ScrollView
@@ -34,7 +37,7 @@ export function FilterChips({ filters, onToggle }: Props) {
       {CHIPS.map(({ key, label }) => {
         const on = filters[key];
         return (
-          <Pressable
+          <PressableScale
             key={key}
             onPress={() => onToggle(key)}
             accessibilityRole="button"
@@ -43,18 +46,18 @@ export function FilterChips({ filters, onToggle }: Props) {
             style={[
               styles.chip,
               {
-                backgroundColor: on ? theme.primary : theme.background,
-                borderColor: on ? theme.primary : theme.backgroundSelected,
+                backgroundColor: on ? theme.primary : palette.card,
+                borderColor: on ? theme.primary : palette.line,
               },
             ]}
           >
             <ScaledText
               type="smallBold"
-              style={{ color: on ? theme.onPrimary : theme.text }}
+              style={{ color: on ? theme.onPrimary : palette.ink }}
             >
               {on ? `${label}: on` : `${label}: off`}
             </ScaledText>
-          </Pressable>
+          </PressableScale>
         );
       })}
     </ScrollView>
