@@ -24,6 +24,7 @@ import { ROUTE_COLOR, STATION_COLOR } from "./mapTheme";
 import { MapOverlay } from "./MapOverlay";
 import { useActiveAlert } from "./useActiveAlert";
 
+// Starting view is central Cape Town. The camera moves to the user once their location is known.
 const cameraPosition = {
   coordinates: { latitude: -33.9249, longitude: 18.4241 },
   zoom: 12,
@@ -32,6 +33,7 @@ const cameraPosition = {
 export default function MapScreen() {
   const [permission] = useLocationPermissions({ request: true });
   const showUserLocation = permission?.granted ?? false;
+  // Built once from the bundled SAPS crime data.
   const crimeHeatmapCircles = useMemo(
     () => buildHeatmapCircles(getCapeTownCrimeHeatmapPoints()),
     [],
@@ -54,6 +56,8 @@ export default function MapScreen() {
   const alert = useActiveAlert();
 
   const [userPos, setUserPos] = useState<LatLng | null>(null);
+  // selectedId: the tapped station (opens its info sheet).
+  // helpActive: whether the route to the nearest station is showing.
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [helpActive, setHelpActive] = useState(false);
   const [filters, setFilters] = useState<Filters>({
@@ -85,7 +89,10 @@ export default function MapScreen() {
 
   const selected = stations.find((s) => s.station === selectedId) ?? null;
   const origin = userPos ?? DEFAULT_USER_LOCATION;
-  const nearest = useMemo(() => nearestStation(stations, origin), [stations, origin]);
+  const nearest = useMemo(
+    () => nearestStation(stations, origin),
+    [stations, origin],
+  );
 
   const toggleFilter = (key: FilterKey) =>
     setFilters((current) => ({ ...current, [key]: !current[key] }));

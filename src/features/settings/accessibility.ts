@@ -3,10 +3,10 @@
 // change what other screens look like without needing a provider in the
 // root layout.
 //
-// NOTE: kept in memory only for now, so it resets when the app restarts.
-// TODO: save it (for example in the user's Firestore profile) once storage exists.
+// NOTE: this store is in memory. SettingsScreen saves the choice to the user's
+// Firestore profile and sets it again here when the profile loads.
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from "react";
 
 const LARGE_TEXT_SCALE = 1.3;
 
@@ -37,7 +37,7 @@ export function useAccessibility() {
   const current = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
   return {
     largeText: current.largeText,
-    // Multiply font sizes by this. Teammates can use it in themed-text.tsx.
+    // Multiply font sizes by this
     textScale: current.largeText ? LARGE_TEXT_SCALE : 1,
     setLargeText,
   };

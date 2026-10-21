@@ -6,28 +6,48 @@ import {
   Share,
   StyleSheet,
   Switch,
-  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
 
+import { Button, Card, Input } from "@/components/ui/form";
+import { useAuth } from "@/hooks/use-auth";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { BottomTabInset, Spacing } from "@/constants/theme";
 import { useGroup } from "@/hooks/use-group";
 import { useMyProfile } from "@/hooks/use-my-profile";
 import { useNow } from "@/hooks/use-now";
-import { useTheme } from "@/hooks/use-theme";
 import { createGroup, joinGroup, leaveGroup } from "@/services/groups";
 import { updateProfile } from "@/services/users";
 
 import { isFresh, lastSeenLabel } from "./lastSeen";
 
-const ACCENT = "#208AEF";
+// Group tab: sign-in prompt for guests, then either the create/join forms
+// or the current group's details.
 
 export default function GroupScreen() {
+  // Guests use the app anonymously; groups need a real account.
+  const { isLoggedIn, loading: authLoading } = useAuth();
   const { uid, profile, groupCode, loading } = useMyProfile();
 
+  if (!authLoading && !isLoggedIn) {
+    return (
+      <ThemedView style={styles.gate}>
+        <ThemedText type="title">Groups</ThemedText>
+        <ThemedText>
+          Sign in to create or join a group and share your live location with
+          friends.
+        </ThemedText>
+        <Button
+          label="Sign in or register"
+          onPress={() => router.navigate("/settings/login")}
+        />
+      </ThemedView>
+    );
+  }
+  // Wait for the profile so we know whether the user is already in a group.
   if (loading || !uid) {
     return (
       <ThemedView style={styles.centered}>
@@ -56,6 +76,7 @@ export default function GroupScreen() {
   );
 }
 
+// Shown when the user isn't in a group: set a display name, then create or join one.
 function NoGroup({ uid, savedName }: { uid: string; savedName: string }) {
   const [name, setName] = useState(savedName);
   const [groupName, setGroupName] = useState("");
@@ -124,6 +145,7 @@ function NoGroup({ uid, savedName }: { uid: string; savedName: string }) {
   );
 }
 
+// Shown once the user is in a group: invite code, sharing toggle and who's sharing.
 function GroupDetails({
   uid,
   code,
@@ -134,6 +156,7 @@ function GroupDetails({
   sharing: boolean;
 }) {
   const { group, locations } = useGroup(code);
+  // Re-render every 30 s so "last seen" labels stay current
   const now = useNow(30_000);
   const sharingNow = locations.filter((l) => isFresh(l, now));
 
@@ -220,51 +243,6 @@ function GroupDetails({
   );
 }
 
-function Card({ children }: { children: React.ReactNode }) {
-  return (
-    <ThemedView type="backgroundElement" style={styles.card}>
-      {children}
-    </ThemedView>
-  );
-}
-
-function Input(props: React.ComponentProps<typeof TextInput>) {
-  const theme = useTheme();
-  return (
-    <TextInput
-      placeholderTextColor={theme.textSecondary}
-      {...props}
-      style={[
-        styles.input,
-        { color: theme.text, borderColor: theme.backgroundSelected },
-      ]}
-    />
-  );
-}
-
-function Button({
-  label,
-  onPress,
-  disabled,
-}: {
-  label: string;
-  onPress: () => void;
-  disabled?: boolean;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={disabled}
-      style={({ pressed }) => [
-        styles.button,
-        (pressed || disabled) && styles.buttonDimmed,
-      ]}
-    >
-      <ThemedText style={styles.buttonText}>{label}</ThemedText>
-    </Pressable>
-  );
-}
-
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   centered: { flex: 1, alignItems: "center", justifyContent: "center" },
@@ -273,26 +251,7 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
     paddingBottom: BottomTabInset + Spacing.four,
   },
-  card: {
-    padding: Spacing.three,
-    borderRadius: Spacing.three,
-    gap: Spacing.two,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: Spacing.two,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.two,
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: ACCENT,
-    borderRadius: Spacing.two,
-    paddingVertical: Spacing.three,
-    alignItems: "center",
-  },
-  buttonDimmed: { opacity: 0.5 },
-  buttonText: { color: "#fff", fontWeight: "600" },
+  rowText: { flex: 1 },
   code: { letterSpacing: 4 },
   row: {
     flexDirection: "row",
@@ -300,7 +259,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: Spacing.two,
   },
-  rowText: { flex: 1 },
   leave: { alignItems: "center", padding: Spacing.three },
   leaveText: { color: "#C0392B", fontWeight: "600" },
+  gate: {
+    flex: 1,
+    justifyContent: "center",
+    padding: Spacing.four,
+    gap: Spacing.three,
+  },
 });

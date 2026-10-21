@@ -16,5 +16,5 @@ export function useAuth() {
     [],
   );
 
-  return { user, loading };
+  return { user, loading, isLoggedIn: !!user && !user.isAnonymous };
 }
