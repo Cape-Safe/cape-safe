@@ -2,6 +2,8 @@
 
 A mobile safety app for tourists travelling in South Africa (Cape Town, v1).
 
+**[Watch the demo video](https://drive.google.com/file/d/1RxS0mkcgT4HCJtP4X-TDs2Eztu5-6rSN/view?usp=drive_link)**
+
 Cape Safe helps a visitor see how safe the area around them is, get help in one tap, and keep track of the people they travel with. It is built for the ITMDA3-34 group project.
 
 > **Disclaimer:** Cape Safe does not replace emergency services. In an emergency always call 10111 (SAPS), 10177 (ambulance) or 112 (mobile emergency).
