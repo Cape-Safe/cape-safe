@@ -8,12 +8,13 @@ Cape Safe helps a visitor see how safe the area around them is, get help in one 
 
 ## What the app does today
 
-| Tab | What it does |
-| --- | --- |
-| **Map** | Shows a crime-risk heatmap for Cape Town built from SAPS station statistics. Police station markers open an area card with a risk level (Lower, Moderate or High), a 0 to 100 score, **Call 10111** and **Directions**. Filter chips show or hide police stations, risk areas and alerts. **Nearest help** draws a line to the closest station, and **Me** re-centres the map. A banner shows the most serious active safety alert. A search bar (Google Places) finds places in Cape Town. |
-| **SOS** | One-tap calls to eight South African emergency services: SAPS, Metro Police, Ambulance, Poisons Helpline, Bureau of Missing Persons, Fire and Rescue, NSRI and Wilderness Search and Rescue. |
-| **Group** | Create or join a group with a 6-character invite code, and share your live location with the group while the app is open. |
-| **Settings** | Account, notifications, location and accessibility preferences. Toggles are saved to the user's Firestore profile. Sign in or register from here, plus Privacy policy and Terms of use. |
+| Tab                                                                                                                                                                          | What it does                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Map**                                                                                                                                                                      | Shows a crime-risk heatmap for Cape Town built from SAPS station statistics. Police station markers open an area card with a risk level (Lower, Moderate or High), a 0 to 100 score, **Call 10111** and **Directions**. Filter chips show or hide police stations, risk areas and alerts. **Nearest help** draws a line to the closest station, and **Me** re-centres the map. A banner shows the most serious active safety alert. A search bar (Google Places) finds places in Cape Town. |
+| **SOS**                                                                                                                                                                      | One-tap calls to eight South African emergency services: SAPS, Metro Police, Ambulance, Poisons Helpline, Bureau of Missing Persons, Fire and Rescue, NSRI and Wilderness Search and Rescue.                                                                                                                                                                                                                                                                                                |
+| **Group**                                                                                                                                                                    | Create or join a group with a 6-character invite code, and share your live location with the group while the app is open.                                                                                                                                                                                                                                                                                                                                                                   |
+| <br><img src="docs/screenshots/groupmembers.png" width="180" alt="Group members" /> <img src="docs/screenshots/locationsharing.png" width="180" alt="Location sharing" /> /> |
+| **Settings**                                                                                                                                                                 | Account, notifications, location and accessibility preferences. Toggles are saved to the user's Firestore profile. Sign in or register from here, plus Privacy policy and Terms of use.                                                                                                                                                                                                                                                                                                     |
 
 Everyone starts as an anonymous guest so the app works straight away. Groups and a saved profile need a real account (email and password).
 
@@ -32,15 +33,15 @@ iOS release, push notifications, background live-location tracking, other cities
 
 ## Tech stack
 
-| Area | Choice |
-| --- | --- |
-| App | React Native with TypeScript, built with Expo (SDK 57) |
-| Navigation | Expo Router (file-based routing) with native tabs |
-| Maps | `expo-maps` (Google Maps on Android, Apple Maps on iOS), `expo-location` for position |
-| Search | Google Places API (New), called over REST |
-| Backend | Firebase Authentication (email and password, anonymous guests) and Firestore, using the Firebase JS SDK |
-| UI | Shared design pieces in `src/components/design`, animations with `react-native-reanimated`, haptics with `expo-haptics` |
-| Builds | EAS (Expo Application Services) development builds |
+| Area       | Choice                                                                                                                  |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------- |
+| App        | React Native with TypeScript, built with Expo (SDK 57)                                                                  |
+| Navigation | Expo Router (file-based routing) with native tabs                                                                       |
+| Maps       | `expo-maps` (Google Maps on Android, Apple Maps on iOS), `expo-location` for position                                   |
+| Search     | Google Places API (New), called over REST                                                                               |
+| Backend    | Firebase Authentication (email and password, anonymous guests) and Firestore, using the Firebase JS SDK                 |
+| UI         | Shared design pieces in `src/components/design`, animations with `react-native-reanimated`, haptics with `expo-haptics` |
+| Builds     | EAS (Expo Application Services) development builds                                                                      |
 
 ## Crime risk data
 
@@ -97,12 +98,12 @@ EXPO_PUBLIC_GOOGLE_PLACES_API_KEY=
 EXPO_PUBLIC_ANDROID_CERT_SHA1=
 ```
 
-| Variable | Used for |
-| --- | --- |
-| `GOOGLE_MAPS_API_KEY` | The map on Android (read in `app.config.ts`) |
-| `EXPO_PUBLIC_FIREBASE_*` | Firebase Auth and Firestore. Without them, sign-in, groups and saved settings do not work. |
-| `EXPO_PUBLIC_GOOGLE_PLACES_API_KEY` | The map search bar. Without it, search shows "Search isn't set up on this build." |
-| `EXPO_PUBLIC_ANDROID_CERT_SHA1` | Optional. Lets an app-restricted Places key work from Android. |
+| Variable                            | Used for                                                                                   |
+| ----------------------------------- | ------------------------------------------------------------------------------------------ |
+| `GOOGLE_MAPS_API_KEY`               | The map on Android (read in `app.config.ts`)                                               |
+| `EXPO_PUBLIC_FIREBASE_*`            | Firebase Auth and Firestore. Without them, sign-in, groups and saved settings do not work. |
+| `EXPO_PUBLIC_GOOGLE_PLACES_API_KEY` | The map search bar. Without it, search shows "Search isn't set up on this build."          |
+| `EXPO_PUBLIC_ANDROID_CERT_SHA1`     | Optional. Lets an app-restricted Places key work from Android.                             |
 
 `.env.local` is ignored by git. After changing it, restart with `npx expo start -c`. `EXPO_PUBLIC_` values are bundled into the app, so restrict those keys in Google Cloud and Firebase.
 
@@ -130,14 +131,14 @@ Run lint and typecheck before opening a pull request. Two known typecheck messag
 
 Firestore collections used by the app:
 
-| Collection | Contents | Who can access it |
-| --- | --- | --- |
-| `users/{uid}` | Profile, settings, group membership | Only that user |
-| `areas` | Crime areas with report counts and rating totals | Anyone can read. Signed-in users can add one report's worth to the totals. |
-| `reports` | Area ratings (1 to 5) and comments | Signed-in users read visible reports and create their own |
-| `alerts` | Safety alerts shown as the map banner | Anyone can read. Written by the team in the Firebase console. |
-| `groups/{code}` | A group. The document ID is the invite code. | Members. Joining needs the exact code. |
-| `groups/{code}/locations/{uid}` | Live locations | Group members read. Each user writes only their own. |
+| Collection                      | Contents                                         | Who can access it                                                          |
+| ------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------- |
+| `users/{uid}`                   | Profile, settings, group membership              | Only that user                                                             |
+| `areas`                         | Crime areas with report counts and rating totals | Anyone can read. Signed-in users can add one report's worth to the totals. |
+| `reports`                       | Area ratings (1 to 5) and comments               | Signed-in users read visible reports and create their own                  |
+| `alerts`                        | Safety alerts shown as the map banner            | Anyone can read. Written by the team in the Firebase console.              |
+| `groups/{code}`                 | A group. The document ID is the invite code.     | Members. Joining needs the exact code.                                     |
+| `groups/{code}/locations/{uid}` | Live locations                                   | Group members read. Each user writes only their own.                       |
 
 The rules are in `firestore.rules`, and the TypeScript types are in `src/types/index.ts`.
 
