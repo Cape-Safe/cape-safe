@@ -98,7 +98,7 @@ export function shareMyLocation(
 }
 
 // Removes the current user's location from the group.
-export function stopSharingLocation(code: string) {
+export async function stopSharingLocation(code: string) {
   return deleteDoc(locationRef(code, currentUid()));
 }
 
