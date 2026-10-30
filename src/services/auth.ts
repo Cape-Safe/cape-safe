@@ -6,8 +6,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { stopSharingLocation } from "@/services/groups";
 import { auth, db } from "@/services/firebase";
 
 export function ensureSignedIn() {
@@ -42,6 +42,21 @@ export function logIn(email: string, password: string) {
 
 // Signs out, then back in anonymously so the map and reports keep working.
 export async function logOut() {
+  const uid = auth.currentUser?.uid;
+  if (uid) {
+    const profile = await getDoc(doc(db, "users", uid));
+    const code: string | undefined = profile.data()?.groupIds?.[0];
+    if (code) {
+      await stopSharingLocation(code).catch((err) =>
+        console.warn("Couldn't stop sharing before log out:", err),
+      );
+      await setDoc(
+        doc(db, "users", uid),
+        { locationSharing: false },
+        { merge: true },
+      );
+    }
+  }
   await signOut(auth);
   await signInAnonymously(auth);
 }
